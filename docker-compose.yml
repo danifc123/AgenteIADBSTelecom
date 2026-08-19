@@ -1,0 +1,48 @@
+# Ollama containerizado é OPCIONAL — ver README "Ollama: host vs Docker"
+# para o porquê. Padrão (`docker compose up`): só o container `api` sobe,
+# e ele fala com o Ollama rodando no HOST (mais rápido, pode usar GPU).
+# Para rodar o Ollama também dentro do Docker (100% self-contained, porém
+# mais lento — testado e documentado no README): `docker compose --profile
+# containerized-ollama up`.
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["containerized-ollama"]
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ollama-init:
+    image: ollama/ollama:latest
+    profiles: ["containerized-ollama"]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      - OLLAMA_HOST=ollama:11434
+    entrypoint: ["/bin/sh", "-c", "ollama pull ${OLLAMA_MODEL:-qwen2.5:7b}"]
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    # Permite o container "api" alcançar o Ollama do host via
+    # host.docker.internal — funciona nativamente no Docker Desktop
+    # (Windows/Mac); em Linux puro, este extra_hosts é o que faz o mesmo
+    # nome funcionar.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+
+volumes:
+  ollama_data:
