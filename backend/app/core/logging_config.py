@@ -12,7 +12,7 @@ import sys
 
 import structlog
 
-_REDACT_KEYS = {"authorization", "ixc_token", "token"}
+_REDACT_KEYS = {"authorization", "ixc_token", "ollama_api_key", "token"}
 
 # region Processors
 

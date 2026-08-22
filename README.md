@@ -15,8 +15,9 @@ MVP de aplicativo mobile com chat inteligente para a DBS TELECOM: identifica o c
 - [Tecnologias e justificativa](#tecnologias-e-justificativa)
 - [Estrutura de pastas](#estrutura-de-pastas)
 - [Como rodar](#como-rodar)
+- [Teste guiado](#teste-guiado)
 - [Variáveis de ambiente](#variáveis-de-ambiente)
-- [Ollama: host vs Docker](#ollama-host-vs-docker)
+- [Ollama: host vs Docker vs nuvem](#ollama-host-vs-docker-vs-nuvem)
 - [Integração com a IXC](#integração-com-a-ixc)
 - [Fluxos implementados](#fluxos-implementados)
 - [Segurança](#segurança)
@@ -103,8 +104,8 @@ DBSTelecomAgenteIA/
 
 - Python 3.12+
 - Node.js 20+
-- [Ollama](https://ollama.com) instalado, com o modelo baixado: `ollama pull qwen2.5:7b`
-- Docker (opcional — ver seção [Ollama: host vs Docker](#ollama-host-vs-docker))
+- Uma forma de rodar o Ollama — **não precisa instalar nada localmente** se for usar o Ollama Cloud (padrão do projeto, ver [Ollama: host vs Docker vs nuvem](#ollama-host-vs-docker-vs-nuvem)); se preferir local, [instale o Ollama](https://ollama.com) e baixe o modelo: `ollama pull qwen2.5:7b`
+- Docker (opcional — ver seção [Ollama: host vs Docker vs nuvem](#ollama-host-vs-docker-vs-nuvem))
 - Expo Go instalado no celular (mais rápido para ver o app rodando) **ou** Android Studio com emulador configurado
 
 ### 1. Backend
@@ -119,9 +120,8 @@ pip install -r requirements.txt
 
 copy .env.example .env          # Windows
 # cp .env.example .env          # Linux/Mac
-# edite o .env com o IXC_TOKEN real
+# edite o .env com o IXC_TOKEN real e, se for usar Ollama Cloud, o OLLAMA_API_KEY
 
-ollama serve                    # numa aba separada, se ainda não estiver rodando
 python -m uvicorn app.main:app --reload
 ```
 
@@ -172,6 +172,14 @@ RUN_LIVE_IXC_TESTS=1 pytest tests/test_ixc_client_live.py -v   # opcional: valid
 
 ---
 
+## Teste guiado
+
+Depois de rodar o backend e o app, veja o [TESTE_GUIADO.md](TESTE_GUIADO.md) — um roteiro passo a
+passo (identificação, Comercial, Financeiro, Suporte nos três desfechos N1/N2, casos de robustez)
+com um contato de teste real e o que esperar em cada etapa.
+
+---
+
 ## Variáveis de ambiente
 
 ### `backend/.env` (ver `.env.example` completo)
@@ -180,8 +188,9 @@ RUN_LIVE_IXC_TESTS=1 pytest tests/test_ixc_client_live.py -v   # opcional: valid
 |---|---|---|
 | `IXC_TOKEN` | ✅ | Token da API da IXC. **Nunca commitar** — só em `.env`, que está no `.gitignore`. |
 | `IXC_BASE_URL` | | URL base da API webservice da IXC |
-| `OLLAMA_BASE_URL` | | Ver [Ollama: host vs Docker](#ollama-host-vs-docker) |
-| `OLLAMA_MODEL` | | Modelo usado (`qwen2.5:7b` por padrão) |
+| `OLLAMA_BASE_URL` | | Ver [Ollama: host vs Docker vs nuvem](#ollama-host-vs-docker-vs-nuvem) |
+| `OLLAMA_MODEL` | | Modelo usado (`gpt-oss:20b` por padrão, via Ollama Cloud) |
+| `OLLAMA_API_KEY` | Só p/ Ollama Cloud | Chave grátis gerada em [ollama.com/settings/keys](https://ollama.com/settings/keys). Deixe em branco rodando localmente. |
 | `OLLAMA_TIMEOUT_SECONDS` | | 180s por padrão — dá folga pro "cold start" do modelo |
 
 ### `mobile/.env`
@@ -192,22 +201,37 @@ RUN_LIVE_IXC_TESTS=1 pytest tests/test_ixc_client_live.py -v   # opcional: valid
 
 ---
 
-## Ollama: host vs Docker
+## Ollama: host vs Docker vs nuvem
 
-**Testamos as duas configurações de verdade, não só na teoria — e há uma diferença real de performance:**
+**Testamos as três formas de verdade, não só na teoria — e há diferenças reais de performance e de requisito de hardware:**
 
 - **Ollama rodando no host** (fora do Docker): usa a aceleração disponível na máquina (GPU, se houver). Nos nossos testes, respostas do chat chegaram em poucos segundos.
 - **Ollama rodando dentro do Docker Desktop** (`--profile containerized-ollama`): sem passagem de GPU configurada, a inferência cai para **CPU-only**. Medimos ~21 tokens/segundo de processamento de prompt, contra uma sessão de chat que já acumula ~1400 tokens de contexto — o suficiente para, em alguns casos, passar de 1 minuto por resposta e esbarrar em timeout.
+- **Ollama Cloud** (`https://ollama.com`, sem instalar nada localmente): a alternativa para quem não tem GPU/RAM suficiente na máquina para carregar o modelo (encontramos isso na prática: `qwen2.5:7b` local precisa de ~2,5 GB de RAM livre só pra carregar, e nem sempre isso está disponível). Tier gratuito, "uso leve" (rate limited, mas suficiente pro MVP). Requer uma chave grátis em [ollama.com/settings/keys](https://ollama.com/settings/keys).
 
-**Por isso a configuração padrão prioriza velocidade**: `docker compose up` sobe só o container `api`, que fala com o Ollama do **host** via `host.docker.internal` (funciona nativamente no Docker Desktop; em Linux puro o `docker-compose.yml` já inclui o `extra_hosts` necessário para o mesmo nome funcionar).
+**Configuração usada por padrão neste projeto**: Ollama Cloud, com o modelo `gpt-oss:20b` — não `qwen3.5:cloud`, porque a variante do Qwen na nuvem só está disponível na versão 397b, que exige plano pago; `gpt-oss:20b` é gratuito e faz tool-calling corretamente com o schema deste projeto (testado nos 3 departamentos).
 
-Se preferir tudo 100% dentro do Docker (sem precisar instalar Ollama na máquina), isso continua disponível como opção:
+Se preferir rodar localmente (sem depender de internet/nuvem), troque no `.env`:
+
+```bash
+# Local, backend fora do Docker
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:7b
+OLLAMA_API_KEY=
+
+# Local, backend em Docker, Ollama no host
+OLLAMA_BASE_URL=http://host.docker.internal:11434
+OLLAMA_MODEL=qwen2.5:7b
+OLLAMA_API_KEY=
+```
+
+Ou tudo 100% dentro do Docker (sem precisar instalar Ollama na máquina):
 
 ```bash
 docker compose --profile containerized-ollama up
 ```
 
-Nesse caso, troque `OLLAMA_BASE_URL` no `.env` para `http://ollama:11434` (o `.env.example` documenta os três cenários possíveis).
+Nesse caso, troque `OLLAMA_BASE_URL` no `.env` para `http://ollama:11434` (o `.env.example` documenta os quatro cenários possíveis, com os prós/contras de cada um).
 
 ---
 

@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     ixc_token: str
 
     # --- Ollama ---
+    ollama_api_key: str | None = None
     ollama_base_url: str = "http://localhost:11434"
     ollama_max_tool_rounds: int = 3
     ollama_model: str = "qwen2.5:7b"
