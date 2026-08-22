@@ -60,6 +60,11 @@ def _format_cpf_cnpj(digits: str) -> str:
 _ASSUNTO_LENTIDAO_ID = 6
 _ASSUNTO_VISITA_TECNICA_ID = 22
 
+# id do setor "SETOR TECNICO" neste ambiente demo — confirmado comparando
+# com um chamado de referência real (id 13623) que aparece corretamente
+# no painel. Numa instalação diferente, reconferir em Configurações > Setores.
+_SETOR_TECNICO_ID = "7"
+
 from app.core.config import Settings
 from app.core.logging_config import get_logger
 
@@ -225,12 +230,21 @@ class IXCClient:
     async def abrir_chamado_suporte(self, cliente_id: str, resumo: str) -> dict:
         """Abre um chamado de suporte N1 (fila remota) para o cliente. Retorna o registro do chamado criado.
 
-        Payload confirmado com um insert real de teste contra o ambiente
-        demo (registro de teste `[TESTE]`, id 13600, criado e sinalizado
-        para o time da DBS excluir). `id_assunto=6` é "Lentidão" no
-        catálogo de assuntos desse ambiente demo especificamente — em outra
-        instalação da IXC esse id pode ser diferente e precisa ser
-        reconferido em Suporte > Assuntos no painel admin.
+        Payload confirmado comparando um insert de teste real com um chamado
+        de referência já existente no ambiente demo (id 13623, "Corretiva
+        (Sem Acesso)", visível corretamente como "Aberta"/"SETOR TECNICO" no
+        painel): `status="A"` (Aberta), `setor="7"` (Setor Técnico) e
+        `tipo="C"` (Corretiva) são os valores que a IXC realmente reconhece
+        — os que usávamos antes (`status="N"`, `setor="1"`, `tipo="A"`)
+        criavam o chamado, mas com esses campos em branco no painel,
+        invisíveis nos filtros padrão da fila de Suporte.
+        `id_assunto=6` é "Lentidão" no catálogo de assuntos desse ambiente
+        demo especificamente — em outra instalação da IXC esse id pode ser
+        diferente e precisa ser reconferido em Suporte > Assuntos.
+        `origem_endereco="L"` (usar o endereço já cadastrado do cliente) foi
+        tentado, mas a IXC exige `id_login` nesse caso — dado que não
+        buscamos hoje na identificação. Mantido `"M"` (manual) com o texto
+        de aviso até isso ser resolvido (ver limitações conhecidas).
         """
         return await self._create(
             "su_oss_chamado",
@@ -238,12 +252,14 @@ class IXCClient:
                 "id_cliente": cliente_id,
                 "id_filial": "1",
                 "id_assunto": str(_ASSUNTO_LENTIDAO_ID),
-                "id_setor": "1",
-                "setor": "1",
+                "id_setor": _SETOR_TECNICO_ID,
+                "setor": _SETOR_TECNICO_ID,
                 "mensagem": resumo,
-                "tipo": "A",
+                "tipo": "C",
                 "prioridade": "N",
-                "status": "N",
+                "status": "A",
+                "liberado": "1",
+                "melhor_horario_agenda": "Q",
                 "origem_endereco": "M",
                 "endereco": "Endereço a confirmar com o cliente",
             },
@@ -265,12 +281,14 @@ class IXCClient:
                 "id_cliente": cliente_id,
                 "id_filial": "1",
                 "id_assunto": str(_ASSUNTO_VISITA_TECNICA_ID),
-                "id_setor": "1",
-                "setor": "1",
+                "id_setor": _SETOR_TECNICO_ID,
+                "setor": _SETOR_TECNICO_ID,
                 "mensagem": f"{resumo} (período preferido: {periodo_preferido})",
-                "tipo": "A",
+                "tipo": "C",
                 "prioridade": "A",
-                "status": "N",
+                "status": "A",
+                "liberado": "1",
+                "melhor_horario_agenda": "Q",
                 "origem_endereco": "M",
                 "endereco": "Endereço a confirmar com o cliente",
             },
