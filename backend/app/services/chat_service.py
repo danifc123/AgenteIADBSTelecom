@@ -10,12 +10,12 @@ from __future__ import annotations
 
 from app.core.session_store import SessionStore
 from app.domain.models import ChatMessage, ConversationState, Department, SupportStage
-from app.services.classifier import classify_by_keywords, parse_route_to_department_call, parse_tool_call_arguments
-from app.services.mcp_client import McpGateway
-from app.services.ollama_client import OllamaClient, run_tool_calling_loop
-from app.services.prompts import build_classification_prompt, build_comercial_prompt, build_financeiro_prompt
+from app.services.ai.classifier import classify_by_keywords, parse_route_to_department_call, parse_tool_call_arguments
+from app.services.ai.mcp_client import McpGateway
+from app.services.ai.ollama_client import OllamaClient, run_tool_calling_loop
+from app.services.ai.prompts import build_classification_prompt, build_comercial_prompt, build_financeiro_prompt
 from app.services.support_flow import advance_support_flow, start_support_flow
-from app.services.tool_schema import ROUTE_TO_DEPARTMENT_TOOL, filter_tools_for_department
+from app.services.ai.tool_schema import ROUTE_TO_DEPARTMENT_TOOL, filter_tools_for_department
 
 _ACTIVE_SUPPORT_STAGES = frozenset(
     {SupportStage.ASK_MULTIPLE_DEVICES, SupportStage.ASK_CHECK_CABLES, SupportStage.SUGGEST_RESTART, SupportStage.ASK_RESOLVED}
@@ -58,6 +58,22 @@ async def _classify_department(
         is_slow = keyword_department == Department.SUPORTE
         return keyword_department, is_slow
 
+    return None
+
+
+def _detect_department_switch(user_message: str, current_department: Department) -> Department | None:
+    """Detecta por palavra-chave se o cliente está pedindo um departamento diferente do atual.
+
+    Regra de negócio: uma vez que o departamento é definido, o atendimento não pode travar nele
+    pro resto da conversa — o cliente precisa poder pedir "quero falar com o financeiro" a
+    qualquer momento e ser atendido. Palavra-chave (rápido, sem chamada à IA) é suficiente aqui
+    porque os vocabulários dos 3 departamentos são bem distintos.
+
+    Retorna o novo `Department`, ou `None` se não houver sinal de troca.
+    """
+    detected = classify_by_keywords(user_message)
+    if detected is not None and detected != current_department:
+        return detected
     return None
 
 
@@ -107,24 +123,37 @@ async def handle_chat_turn(
 
     quick_replies: list[str] | None = None
 
-    if state.department == Department.SUPORTE and state.support_stage in _ACTIVE_SUPPORT_STAGES:
-        reply = await advance_support_flow(state, user_message, mcp_gateway)
-        quick_replies = _QUICK_REPLIES_BY_STAGE.get(state.support_stage) if state.support_stage in _ACTIVE_SUPPORT_STAGES else None
+    switched_department = None
+    if state.department is not None:
+        switched_department = _detect_department_switch(user_message, state.department)
 
-    elif state.department == Department.SUPORTE:
-        # Fluxo de suporte anterior já concluído (resolvido/escalado): reabre a classificação
-        # para um novo assunto na mesma conversa, em vez de travar no departamento antigo.
+    if switched_department is not None:
+        # O cliente pediu outro departamento — vale a qualquer momento, inclusive no meio de um
+        # diagnóstico de Suporte em andamento, pra nunca travar num assunto que ele já abandonou.
         state.department = None
         state.support_stage = None
-        classification = await _classify_department(ollama_client, state, user_message)
+        classification = (switched_department, switched_department == Department.SUPORTE)
         reply, quick_replies = await _route_after_classification(state, user_message, classification, ollama_client, mcp_gateway, all_tools)
+
+    elif state.department == Department.SUPORTE and state.support_stage in _ACTIVE_SUPPORT_STAGES:
+        commercial_tools = filter_tools_for_department(all_tools, Department.COMERCIAL)
+        reply = await advance_support_flow(state, user_message, mcp_gateway, ollama_client, commercial_tools)
+        quick_replies = _QUICK_REPLIES_BY_STAGE.get(state.support_stage) if state.support_stage in _ACTIVE_SUPPORT_STAGES else None
 
     elif state.department is None:
         classification = await _classify_department(ollama_client, state, user_message)
         reply, quick_replies = await _route_after_classification(state, user_message, classification, ollama_client, mcp_gateway, all_tools)
 
     else:
-        reply = await _run_department_chat(state, user_message, ollama_client, mcp_gateway, all_tools)
+        if state.department == Department.SUPORTE:
+            # Suporte concluído e sem sinal claro de outro assunto por palavra-chave: reclassifica
+            # via IA mesmo assim, em vez de travar no departamento antigo.
+            state.department = None
+            state.support_stage = None
+            classification = await _classify_department(ollama_client, state, user_message)
+            reply, quick_replies = await _route_after_classification(state, user_message, classification, ollama_client, mcp_gateway, all_tools)
+        else:
+            reply = await _run_department_chat(state, user_message, ollama_client, mcp_gateway, all_tools)
 
     await session_store.append_message(state.session_id, ChatMessage(role="assistant", content=reply))
     await session_store.save(state)
@@ -147,7 +176,7 @@ async def _route_after_classification(
     state.department = department
 
     if department == Department.SUPORTE:
-        reply = start_support_flow(state, user_message)
+        reply = await start_support_flow(state, user_message, mcp_gateway)
         quick_replies = _QUICK_REPLIES_BY_STAGE.get(state.support_stage) if state.support_stage in _ACTIVE_SUPPORT_STAGES else None
         return reply, quick_replies
 

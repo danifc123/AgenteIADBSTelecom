@@ -12,38 +12,39 @@ passos remotos que não fazem sentido pra esse tipo de defeito.
 from __future__ import annotations
 
 from app.domain.models import ConversationState, SupportStage
-from app.services.classifier import has_physical_damage_signal
-from app.services.mcp_client import McpGateway
+from app.services.ai.classifier import has_physical_damage_signal
+from app.services.ai.mcp_client import McpGateway
+from app.services.ai.ollama_client import OllamaClient, run_tool_calling_loop
+from app.services.ai.prompts import build_post_suporte_upsell_prompt
 
 # region Textos fixos
 
 _QUESTIONS: dict[SupportStage, str] = {
     SupportStage.ASK_MULTIPLE_DEVICES: (
-        "Entendo, vou te ajudar a resolver isso. Esse problema de lentidão acontece em mais de "
-        "um aparelho (celular, TV, notebook), ou só nesse que você está usando agora?"
+        "Poxa, que chato! 😕 Vou te ajudar a resolver isso rapidinho. Essa lentidão acontece em "
+        "mais de um aparelho (celular, TV, notebook), ou só nesse que você está usando agora?"
     ),
     SupportStage.ASK_CHECK_CABLES: (
-        "Você pode verificar se os cabos do roteador/ONU estão bem conectados, sem folga ou "
-        "danos aparentes?"
+        "Beleza! Dá uma olhadinha nos cabos do roteador/ONU pra mim — estão bem encaixados, sem "
+        "folga ou dano aparente? 🔌"
     ),
     SupportStage.SUGGEST_RESTART: (
-        "Vamos tentar reiniciar o equipamento: desligue da tomada, aguarde uns 10 segundos e "
-        "ligue novamente. Pode fazer esse teste?"
+        "Vamos tentar uma coisa que resolve boa parte dos casos de lentidão: desligue o roteador "
+        "da tomada, aguarde uns 30 segundos (isso dá tempo dele descarregar de verdade) e ligue de "
+        "novo. Pode fazer esse teste aí? 🔌"
     ),
-    SupportStage.ASK_RESOLVED: "Depois desses passos, o problema foi resolvido?",
+    SupportStage.ASK_RESOLVED: "E aí, depois desses passos a internet voltou ao normal? 📶",
 }
 
 _N1_ESCALATION_MESSAGE = (
-    "Sem problemas — já registrei seu chamado para o nosso time de Suporte dar continuidade. "
-    "Protocolo: {protocolo}."
+    "Sem problemas! Já registrei seu chamado e nosso time de Suporte vai dar continuidade. "
+    "Protocolo: {protocolo}. 📋"
 )
 _N2_VISIT_MESSAGE = (
-    "Entendi, esse tipo de problema precisa de uma visita técnica presencial. Já agendei o "
-    "atendimento (protocolo {protocolo}) — nossa equipe vai entrar em contato para confirmar o "
-    "melhor horário."
+    "Entendi — esse tipo de problema precisa de uma visita técnica presencial. Já agendei o "
+    "atendimento pra você (protocolo {protocolo}) e nossa equipe vai entrar em contato pra "
+    "confirmar o melhor horário. 🛠️"
 )
-_RESOLVED_MESSAGE = "Que ótimo que resolveu! Qualquer coisa, é só me chamar de novo."
-
 # endregion
 
 # region Helpers privados (ordem alfabética)
@@ -81,6 +82,23 @@ def _extract_protocolo(tool_result: dict, key: str) -> str:
     return str(tool_result.get(key, {}).get("id", "em processamento"))
 
 
+async def _suggest_upgrade_after_resolution(
+    state: ConversationState, mcp_gateway: McpGateway, ollama_client: OllamaClient, commercial_tools: list[dict]
+) -> str:
+    """Comemora a resolução e, se fizer sentido, sugere um plano melhor com dados reais do cliente/catálogo.
+
+    Regra de negócio: a decisão de sugerir (ou não) um upgrade é feita pelo modelo, mas só com base
+    no que `get_customer_plan`/`list_plans` retornarem de verdade — nunca inventa plano ou preço.
+    """
+    messages = [
+        {"role": "system", "content": build_post_suporte_upsell_prompt(state.customer)},
+        {"role": "user", "content": "Consegui resolver o problema de lentidão seguindo as instruções, obrigado!"},
+    ]
+    return await run_tool_calling_loop(
+        ollama_client, mcp_gateway, messages, commercial_tools, max_rounds=3, customer_id=state.customer.id
+    )
+
+
 def _is_affirmative(text: str) -> bool:
     """Verifica se a resposta livre do cliente é afirmativa (ex: 'sim', 'resolveu'). Retorna `True`/`False`.
 
@@ -102,7 +120,11 @@ def _is_affirmative(text: str) -> bool:
 
 
 async def advance_support_flow(
-    state: ConversationState, user_message: str, mcp_gateway: McpGateway
+    state: ConversationState,
+    user_message: str,
+    mcp_gateway: McpGateway,
+    ollama_client: OllamaClient,
+    commercial_tools: list[dict],
 ) -> str:
     """Avança a máquina de estados de Suporte a partir da resposta do cliente. Retorna a próxima mensagem ao cliente."""
     if has_physical_damage_signal(user_message):
@@ -125,21 +147,22 @@ async def advance_support_flow(
     if current_stage == SupportStage.ASK_RESOLVED:
         if _is_affirmative(user_message):
             state.support_stage = SupportStage.CLOSED_RESOLVED
-            return _RESOLVED_MESSAGE
+            return await _suggest_upgrade_after_resolution(state, mcp_gateway, ollama_client, commercial_tools)
         return await _escalate_n1(state, mcp_gateway, user_message)
 
     # Estado inesperado: nunca trava o atendimento, escala por segurança.
     return await _escalate_n1(state, mcp_gateway, user_message)
 
 
-def start_support_flow(state: ConversationState, triggering_message: str) -> str:
-    """Inicia o fluxo de pré-diagnóstico de Suporte. Retorna a primeira pergunta ao cliente."""
+async def start_support_flow(state: ConversationState, triggering_message: str, mcp_gateway: McpGateway) -> str:
+    """Inicia o fluxo de pré-diagnóstico de Suporte. Retorna a primeira pergunta ao cliente.
+
+    Se a própria mensagem que disparou o Suporte já tiver sinal de dano físico, pula direto
+    para o desfecho N2 (reaproveitando `_escalate_n2`, que de fato chama a ferramenta de
+    agendamento — nunca promete uma visita sem realmente registrá-la na IXC).
+    """
     if has_physical_damage_signal(triggering_message):
-        state.support_stage = SupportStage.ESCALATE_N2_VISIT
-        return (
-            "Entendi, pelo que você descreveu pode ser um problema físico no cabeamento ou "
-            "equipamento. Vou providenciar uma visita técnica."
-        )
+        return await _escalate_n2(state, mcp_gateway, triggering_message)
     state.support_stage = SupportStage.ASK_MULTIPLE_DEVICES
     return _QUESTIONS[SupportStage.ASK_MULTIPLE_DEVICES]
 

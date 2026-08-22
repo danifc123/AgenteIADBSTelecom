@@ -28,6 +28,19 @@ class FakeMcpGateway:
 
 # endregion
 
+# region Fake OllamaClient
+
+
+class FakeOllamaClient:
+    """Substitui o `OllamaClient` real nos testes — devolve uma resposta fixa, sem tool_calls, sem tocar rede."""
+
+    async def chat(self, messages: list[dict], tools: list[dict] | None = None) -> dict:
+        """Devolve uma mensagem de assistente fixa (sem tool_calls). Retorna o dicionário da mensagem."""
+        return {"role": "assistant", "content": "Que ótimo que resolveu! 🎉"}
+
+
+# endregion
+
 # region Fixtures
 
 
@@ -45,25 +58,27 @@ def state() -> ConversationState:
 async def test_advance_support_flow_cannot_skip_stages(state: ConversationState):
     """As perguntas devem acontecer sempre na ordem: dispositivos -> cabos -> reiniciar -> resolveu."""
     gateway = FakeMcpGateway()
-    start_support_flow(state, "minha internet está lenta")
+    ollama = FakeOllamaClient()
+    await start_support_flow(state, "minha internet está lenta", gateway)
     assert state.support_stage == SupportStage.ASK_MULTIPLE_DEVICES
 
-    await advance_support_flow(state, "só nesse aparelho", gateway)
+    await advance_support_flow(state, "só nesse aparelho", gateway, ollama, [])
     assert state.support_stage == SupportStage.ASK_CHECK_CABLES
 
-    await advance_support_flow(state, "sim, estão ok", gateway)
+    await advance_support_flow(state, "sim, estão ok", gateway, ollama, [])
     assert state.support_stage == SupportStage.SUGGEST_RESTART
 
-    await advance_support_flow(state, "já reiniciei", gateway)
+    await advance_support_flow(state, "já reiniciei", gateway, ollama, [])
     assert state.support_stage == SupportStage.ASK_RESOLVED
 
 
 async def test_advance_support_flow_escalates_to_n1_when_not_resolved(state: ConversationState):
     """Resposta negativa na etapa final deve escalar para N1 e chamar `log_support_escalation`."""
     gateway = FakeMcpGateway()
+    ollama = FakeOllamaClient()
     state.support_stage = SupportStage.ASK_RESOLVED
 
-    await advance_support_flow(state, "não, continua lento", gateway)
+    await advance_support_flow(state, "não, continua lento", gateway, ollama, [])
 
     assert state.support_stage == SupportStage.ESCALATE_N1
     assert gateway.calls[0][0] == "log_support_escalation"
@@ -72,45 +87,56 @@ async def test_advance_support_flow_escalates_to_n1_when_not_resolved(state: Con
 async def test_advance_support_flow_jumps_to_n2_on_physical_damage_mid_flow(state: ConversationState):
     """Sinal de dano físico em qualquer etapa deve pular direto para o agendamento de visita (N2)."""
     gateway = FakeMcpGateway()
+    ollama = FakeOllamaClient()
     state.support_stage = SupportStage.ASK_CHECK_CABLES
 
-    await advance_support_flow(state, "acho que o cabo foi cortado", gateway)
+    await advance_support_flow(state, "acho que o cabo foi cortado", gateway, ollama, [])
 
     assert state.support_stage == SupportStage.ESCALATE_N2_VISIT
     assert gateway.calls[0][0] == "schedule_technical_visit"
 
 
 async def test_advance_support_flow_resolves_without_escalating(state: ConversationState):
-    """Resposta afirmativa na etapa final deve encerrar sem chamar nenhuma tool de escalonamento."""
+    """Resposta afirmativa na etapa final deve encerrar (com sugestão de upgrade via IA) sem escalonar."""
     gateway = FakeMcpGateway()
+    ollama = FakeOllamaClient()
     state.support_stage = SupportStage.ASK_RESOLVED
 
-    await advance_support_flow(state, "sim, resolveu, obrigado!", gateway)
+    reply = await advance_support_flow(state, "sim, resolveu, obrigado!", gateway, ollama, [])
 
     assert state.support_stage == SupportStage.CLOSED_RESOLVED
+    assert reply == "Que ótimo que resolveu! 🎉"
     assert gateway.calls == []
 
 
 async def test_advance_support_flow_negation_containing_affirmative_word_still_escalates(state: ConversationState):
     """'Não resolveu' contém a palavra 'resolveu' — não pode ser lido como afirmativo (bug real encontrado em teste e2e)."""
     gateway = FakeMcpGateway()
+    ollama = FakeOllamaClient()
     state.support_stage = SupportStage.ASK_RESOLVED
 
-    await advance_support_flow(state, "não resolveu, continua lento", gateway)
+    await advance_support_flow(state, "não resolveu, continua lento", gateway, ollama, [])
 
     assert state.support_stage == SupportStage.ESCALATE_N1
     assert gateway.calls[0][0] == "log_support_escalation"
 
 
-def test_start_support_flow_skips_straight_to_n2_on_physical_damage(state: ConversationState):
-    """Se o cliente já relatar dano físico na primeira mensagem, pula direto para N2, sem perguntas de N1."""
-    start_support_flow(state, "o cabo da minha casa foi cortado")
+async def test_start_support_flow_skips_straight_to_n2_on_physical_damage(state: ConversationState):
+    """Se o cliente já relatar dano físico na primeira mensagem, pula direto para N2, sem perguntas de N1.
+
+    Regressão: essa mensagem inicial precisa de fato chamar `schedule_technical_visit` — não
+    basta dizer ao cliente que a visita foi agendada sem registrar isso na IXC.
+    """
+    gateway = FakeMcpGateway()
+    await start_support_flow(state, "o cabo da minha casa foi cortado", gateway)
     assert state.support_stage == SupportStage.ESCALATE_N2_VISIT
+    assert gateway.calls[0][0] == "schedule_technical_visit"
 
 
-def test_start_support_flow_starts_at_first_stage(state: ConversationState):
+async def test_start_support_flow_starts_at_first_stage(state: ConversationState):
     """Sem sinal de dano físico, o fluxo deve começar sempre pela primeira pergunta."""
-    start_support_flow(state, "minha internet está lenta")
+    gateway = FakeMcpGateway()
+    await start_support_flow(state, "minha internet está lenta", gateway)
     assert state.support_stage == SupportStage.ASK_MULTIPLE_DEVICES
 
 
