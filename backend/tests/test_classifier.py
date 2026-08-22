@@ -42,4 +42,16 @@ def test_has_physical_damage_signal_ignores_generic_slowness():
     assert has_physical_damage_signal("minha internet está lenta") is False
 
 
+def test_has_physical_damage_signal_detects_vague_cabling_problem():
+    """'Cabo com problema' (sem palavra de dano explícita) ainda é sinal de N2 — cabeamento
+    nunca se resolve com reinício, mesmo quando o cliente não sabe descrever o defeito."""
+    assert has_physical_damage_signal("meu cabo está com um problema") is True
+
+
+def test_has_physical_damage_signal_does_not_escalate_vague_device_problem():
+    """'Roteador com problema' (vago, sem palavra de dano) NÃO deve pular pro N2 — um
+    equipamento (ao contrário de cabeamento) costuma se resolver com reinício (fluxo N1)."""
+    assert has_physical_damage_signal("meu roteador está com um problema") is False
+
+
 # endregion

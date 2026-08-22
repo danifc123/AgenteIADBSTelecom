@@ -32,16 +32,24 @@ _KEYWORDS: dict[Department, tuple[str, ...]] = {
 
 # Sinais de dano físico no equipamento/cabeamento — usados por support_flow.py
 # para pular direto para o desfecho N2 (visita técnica), em qualquer estágio.
-# Dividido em dois conjuntos (palavra de dano + substantivo de equipamento) em
-# vez de frases exatas, porque o cliente raramente escreve a frase "perfeita"
+# Dividido em conjuntos (palavra de dano + substantivo de equipamento) em vez
+# de frases exatas, porque o cliente raramente escreve a frase "perfeita"
 # ("o cabo foi cortado" não bate com a frase fixa "cabo cortado").
 _PHYSICAL_DAMAGE_INDICATORS: tuple[str, ...] = (
     "cortad", "rompid", "quebrad", "queimo", "queimad", "roeu", "roido", "roído",
     "sem luz", "sem energia", "sem nenhuma luz",
 )
-_PHYSICAL_EQUIPMENT_NOUNS: tuple[str, ...] = (
-    "cabo", "fibra", "fio", "roteador", "modem", "ont", "equipamento", "aparelho",
+# Palavras vagas ("com problema", "com defeito") só contam como sinal de dano
+# físico quando combinadas com cabeamento (_CABLING_NOUNS) — um cabo "com
+# problema" só se resolve com visita técnica. Já um roteador/modem "com
+# problema" costuma ser resolvido com um reinício (fluxo N1), então essas
+# palavras vagas NÃO disparam N2 quando combinadas só com _DEVICE_NOUNS.
+_VAGUE_PROBLEM_INDICATORS: tuple[str, ...] = (
+    "problema", "defeito", "danificad", "estragad", "nao funciona", "não funciona",
 )
+_CABLING_NOUNS: tuple[str, ...] = ("cabo", "fibra", "fio")
+_DEVICE_NOUNS: tuple[str, ...] = ("roteador", "modem", "ont", "equipamento", "aparelho")
+_PHYSICAL_EQUIPMENT_NOUNS: tuple[str, ...] = _CABLING_NOUNS + _DEVICE_NOUNS
 
 # endregion
 
@@ -60,9 +68,17 @@ def classify_by_keywords(message: str) -> Department | None:
 def has_physical_damage_signal(message: str) -> bool:
     """Verifica se a mensagem menciona sinal de dano físico no equipamento/cabeamento. Retorna `True`/`False`."""
     normalized = message.lower()
-    has_damage_word = any(word in normalized for word in _PHYSICAL_DAMAGE_INDICATORS)
     has_equipment_word = any(word in normalized for word in _PHYSICAL_EQUIPMENT_NOUNS)
-    return has_damage_word and has_equipment_word
+    if not has_equipment_word:
+        return False
+
+    has_explicit_damage = any(word in normalized for word in _PHYSICAL_DAMAGE_INDICATORS)
+    if has_explicit_damage:
+        return True
+
+    has_cabling_noun = any(word in normalized for word in _CABLING_NOUNS)
+    has_vague_problem = any(word in normalized for word in _VAGUE_PROBLEM_INDICATORS)
+    return has_cabling_noun and has_vague_problem
 
 
 def parse_route_to_department_call(arguments: dict) -> tuple[Department, bool] | None:
