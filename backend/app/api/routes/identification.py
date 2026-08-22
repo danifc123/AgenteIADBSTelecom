@@ -14,7 +14,7 @@ from app.api.deps import get_mcp_gateway_dep, get_session_store_dep
 from app.core.session_store import SessionStore
 from app.domain.models import Customer
 from app.services.identification_service import CustomerNotFoundError, identify_and_greet
-from app.services.mcp_client import McpGateway
+from app.services.ai.mcp_client import McpGateway
 
 router = APIRouter(prefix="/api", tags=["identification"])
 

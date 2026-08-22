@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from app.domain.models import Department
-from app.services.classifier import classify_by_keywords, has_physical_damage_signal
+from app.services.ai.classifier import classify_by_keywords, has_physical_damage_signal
 
 # region Casos de teste
 

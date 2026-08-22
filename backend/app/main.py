@@ -15,8 +15,8 @@ from fastapi.responses import JSONResponse
 from app.api.routes import chat, health, identification
 from app.core.config import get_settings
 from app.core.logging_config import configure_logging, get_logger
-from app.services.mcp_client import get_mcp_gateway
-from app.services.tool_schema import mcp_tools_to_ollama_format
+from app.services.ai.mcp_client import get_mcp_gateway
+from app.services.ai.tool_schema import mcp_tools_to_ollama_format
 
 logger = get_logger(__name__)
 

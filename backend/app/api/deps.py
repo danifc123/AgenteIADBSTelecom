@@ -9,8 +9,8 @@ from __future__ import annotations
 from fastapi import Request
 
 from app.core.session_store import SessionStore, get_session_store
-from app.services.mcp_client import McpGateway, get_mcp_gateway
-from app.services.ollama_client import OllamaClient, get_ollama_client
+from app.services.ai.mcp_client import McpGateway, get_mcp_gateway
+from app.services.ai.ollama_client import OllamaClient, get_ollama_client
 
 # region Dependências (ordem alfabética)
 

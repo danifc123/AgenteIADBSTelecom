@@ -8,8 +8,8 @@ from pydantic import BaseModel
 from app.api.deps import get_all_tools, get_mcp_gateway_dep, get_ollama_client_dep, get_session_store_dep
 from app.core.session_store import SessionStore
 from app.services.chat_service import handle_chat_turn
-from app.services.mcp_client import McpGateway
-from app.services.ollama_client import OllamaClient
+from app.services.ai.mcp_client import McpGateway
+from app.services.ai.ollama_client import OllamaClient
 
 router = APIRouter(prefix="/api", tags=["chat"])
 

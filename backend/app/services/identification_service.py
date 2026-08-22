@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from app.core.session_store import SessionStore
 from app.domain.models import ChatMessage, ConversationState, Customer
-from app.services.mcp_client import McpGateway
+from app.services.ai.mcp_client import McpGateway
 
 # region Exceptions
 

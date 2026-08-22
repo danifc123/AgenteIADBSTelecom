@@ -13,9 +13,9 @@ import httpx
 
 from app.core.config import Settings, get_settings
 from app.core.logging_config import get_logger
-from app.services.classifier import parse_tool_call_arguments
-from app.services.mcp_client import McpGateway
-from app.services.tool_schema import CUSTOMER_SCOPED_TOOLS
+from app.services.ai.classifier import parse_tool_call_arguments
+from app.services.ai.mcp_client import McpGateway
+from app.services.ai.tool_schema import CUSTOMER_SCOPED_TOOLS
 
 logger = get_logger(__name__)
 
@@ -27,7 +27,10 @@ class OllamaClient:
 
     def __init__(self, settings: Settings) -> None:
         self._model = settings.ollama_model
-        self._client = httpx.AsyncClient(base_url=settings.ollama_base_url, timeout=settings.ollama_timeout_seconds)
+        headers = {"Authorization": f"Bearer {settings.ollama_api_key}"} if settings.ollama_api_key else {}
+        self._client = httpx.AsyncClient(
+            base_url=settings.ollama_base_url, timeout=settings.ollama_timeout_seconds, headers=headers
+        )
 
     async def aclose(self) -> None:
         """Fecha a conexão HTTP subjacente. Não retorna valor."""

@@ -17,14 +17,16 @@ from app.domain.models import Department
 _KEYWORDS: dict[Department, tuple[str, ...]] = {
     Department.FINANCEIRO: (
         "boleto", "fatura", "segunda via", "pagamento", "pagar", "vencimento", "cobranca", "cobrança",
+        "financeiro",
     ),
     Department.SUPORTE: (
         "lenta", "lento", "sem internet", "caiu", "nao conecta", "não conecta", "sem sinal",
         "internet ruim", "instavel", "instável", "sem conexao", "sem conexão", "wifi nao funciona",
+        "suporte",
     ),
     Department.COMERCIAL: (
         "contratar", "plano novo", "mudar de plano", "mudar plano", "upgrade", "assinar",
-        "quero um plano", "quero internet", "preco", "preço", "valores dos planos",
+        "quero um plano", "quero internet", "preco", "preço", "valores dos planos", "comercial",
     ),
 }
 
