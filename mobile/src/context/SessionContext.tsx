@@ -14,6 +14,7 @@ import type { Customer } from '../domain/types';
 
 interface SessionContextValue {
   customer: Customer | null;
+  endSession: () => void;
   greetingMessage: string | null;
   sessionId: string | null;
   startSession: (sessionId: string, customer: Customer, greetingMessage: string) => void;
@@ -36,8 +37,15 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setGreetingMessage(newGreetingMessage);
   };
 
+  /** Encerra o atendimento atual, limpando a sessão (cliente, saudação e session_id). Não retorna valor. */
+  const endSession = () => {
+    setSessionId(null);
+    setCustomer(null);
+    setGreetingMessage(null);
+  };
+
   const value = useMemo(
-    () => ({ customer, greetingMessage, sessionId, startSession }),
+    () => ({ customer, endSession, greetingMessage, sessionId, startSession }),
     [customer, greetingMessage, sessionId],
   );
 

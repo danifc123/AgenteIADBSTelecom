@@ -16,11 +16,12 @@ import { sendChatMessage } from '../services/chatService';
 import { colors } from '../theme/colors';
 import { fontFamily } from '../theme/typography';
 import type { ChatBubbleMessage, Department } from '../domain/types';
+import type { ScreenProps } from '../navigation/AppNavigator';
 
 // #region Tela
 
-export function ChatScreen() {
-  const { customer, greetingMessage, sessionId } = useSession();
+export function ChatScreen({ navigation }: ScreenProps<'Chat'>) {
+  const { customer, endSession, greetingMessage, sessionId } = useSession();
 
   const [messages, setMessages] = useState<ChatBubbleMessage[]>([]);
   const [department, setDepartment] = useState<Department | null>(null);
@@ -51,6 +52,12 @@ export function ChatScreen() {
     void sendMessage(text);
   };
 
+  /** Encerra o atendimento atual e volta para a tela inicial. Não retorna valor. */
+  const handleDisconnect = () => {
+    endSession();
+    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+  };
+
   /** Envia a mensagem ao backend e atualiza a lista de mensagens, departamento e quick-replies. Não retorna valor. */
   const sendMessage = async (text: string) => {
     if (!sessionId) return;
@@ -78,7 +85,7 @@ export function ChatScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <IconButton icon="arrow-left" size={18} />
+            <IconButton icon="arrow-left" size={18} onPress={handleDisconnect} />
             <DbsLogoIcon size={34} />
             <View>
               <Text style={styles.headerTitle}>DBS TELECOM</Text>
