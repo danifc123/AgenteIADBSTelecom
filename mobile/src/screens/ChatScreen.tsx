@@ -127,7 +127,7 @@ export function ChatScreen({ navigation }: ScreenProps<'Chat'>) {
             onChangeText={setDraft}
             style={styles.textInput}
             underlineColor="transparent"
-            activeUnderlineColor="transparent"
+            activeUnderlineColor={colors.laranjaVibrante}
             dense
           />
           <IconButton
