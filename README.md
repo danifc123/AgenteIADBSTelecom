@@ -160,6 +160,10 @@ Escaneie o QR code com o app **Expo Go** no celular (mesma rede Wi-Fi do computa
 
 ### 4. Gerar o APK
 
+O endereço do backend não fica fixo no `.apk` gerado: o app tem uma tela de configuração (ícone de
+engrenagem na Home) onde dá pra digitar e testar o IP do backend em tempo de execução, sem precisar
+gerar um novo build pra apontar pra outro servidor — a configuração fica salva no aparelho.
+
 O projeto já vem configurado (`mobile/eas.json`) para build via [EAS](https://docs.expo.dev/build/introduction/) — só falta autenticar, o que exige uma conta Expo (gratuita) e login interativo, por isso não é algo que dá pra automatizar sem a sua conta:
 
 ```bash

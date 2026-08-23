@@ -5,13 +5,16 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { PaperProvider } from 'react-native-paper';
+import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import type { IconProps } from 'react-native-paper/lib/typescript/components/MaterialCommunityIcon';
 
 import { SessionProvider } from './src/context/SessionContext';
 import { AppNavigator } from './src/navigation/AppNavigator';
+import { loadStoredApiBaseUrl } from './src/services/apiClient';
+import { colors } from './src/theme/colors';
 import { paperTheme } from './src/theme/paperTheme';
 
 // Expo managed workflow: usa @expo/vector-icons (já linkado) em vez do
@@ -24,6 +27,22 @@ const paperIconSettings = {
 };
 
 export default function App() {
+  const [isServerConfigLoaded, setIsServerConfigLoaded] = useState(false);
+
+  useEffect(() => {
+    loadStoredApiBaseUrl().finally(() => setIsServerConfigLoaded(true));
+  }, []);
+
+  if (!isServerConfigLoaded) {
+    return (
+      <SafeAreaProvider>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator animating color={colors.laranjaVibrante} />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <PaperProvider theme={paperTheme} settings={paperIconSettings}>
@@ -37,3 +56,12 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    flex: 1,
+    justifyContent: 'center',
+  },
+});

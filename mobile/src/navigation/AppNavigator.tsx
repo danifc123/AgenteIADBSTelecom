@@ -8,6 +8,7 @@ import React from 'react';
 import { ChatScreen } from '../screens/ChatScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { IdentificationScreen } from '../screens/IdentificationScreen';
+import { ServerConfigScreen } from '../screens/ServerConfigScreen';
 
 // #region Tipos de navegação
 
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Home: undefined;
   Identification: undefined;
   Chat: undefined;
+  ServerConfig: undefined;
 };
 
 export type ScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<RootStackParamList, Screen>;
@@ -31,6 +33,7 @@ export function AppNavigator() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Identification" component={IdentificationScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="ServerConfig" component={ServerConfigScreen} />
     </Stack.Navigator>
   );
 }
