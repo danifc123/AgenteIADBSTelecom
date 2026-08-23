@@ -1,0 +1,157 @@
+<svg viewBox="0 0 1180 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="titulo-fluxo desc-fluxo">
+  <title id="titulo-fluxo">Máquina de estados do pré-diagnóstico de Suporte</title>
+  <desc id="desc-fluxo">Roteiro fixo: múltiplos aparelhos, cabos conectados, reiniciar equipamento, resolveu. Se resolveu, encerra com sugestão de upgrade; se não, escalona para Suporte N1. Sinal de dano físico em qualquer etapa pula direto para o agendamento de visita técnica N2.</desc>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap');
+    text { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; }
+    .eyebrow { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.28em; fill: #f8843d; opacity: 0.9; }
+    .titulo-svg { font-family: 'Chakra Petch', 'Segoe UI', sans-serif; font-weight: 700; font-size: 32px; }
+    .subtitulo-svg { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; fill: #8291b3; }
+    .painel { fill: #0d1526; stroke-width: 1.25; }
+    .painel-titulo { font-family: 'Chakra Petch', 'Segoe UI', sans-serif; font-weight: 600; font-size: 13.5px; letter-spacing: 0.13em; }
+    .painel-legenda { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; fill: #4c5773; }
+    .canto { stroke-width: 2; fill: none; opacity: 0.9; }
+    .no-caixa { fill: #101c33; stroke-width: 1.4; }
+    .no-icone-fundo { fill: rgba(255,255,255,0.03); }
+    .no-nome { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; font-weight: 600; font-size: 14.5px; fill: #eaf1ff; }
+    .no-legenda { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; fill: #8291b3; }
+    .fio { fill: none; stroke-width: 1.6; opacity: 0.65; }
+    .fio-tracejado { stroke-dasharray: 5 5; opacity: 0.6; }
+    .fio-rotulo { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 500; font-size: 12.5px; }
+    .fio-rotulo-fundo { fill: #070b14; opacity: 0.9; }
+    .flow-dot { filter: drop-shadow(0 0 4px currentColor); }
+    .rodape { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; fill: #4c5773; }
+    @media (prefers-reduced-motion: reduce) { .flow-dot { display: none; } }
+  </style>
+
+  <defs>
+    <linearGradient id="grad-titulo2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#ffb066"/><stop offset="100%" stop-color="#f84b03"/>
+    </linearGradient>
+    <pattern id="grade-fundo2" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="rgba(248,75,3,0.055)" stroke-width="1"/>
+    </pattern>
+    <marker id="f-seta-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#35e7ff"/></marker>
+    <marker id="f-seta-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#f84b03"/></marker>
+    <marker id="f-seta-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#35ffa6"/></marker>
+    <marker id="f-seta-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#ff8a3d"/></marker>
+    <marker id="f-seta-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#ff5470"/></marker>
+    <filter id="f-brilho-cyan" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="f-brilho-orange" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="f-brilho-green" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="f-brilho-amber" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="f-brilho-red" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+
+    <g id="f-ic-chat" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 5.5h16v11H10l-4.2 3.6V16.5H4Z"/>
+    </g>
+    <g id="f-ic-check" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M7.8 12.3l2.6 2.6 5.4-5.8"/>
+    </g>
+    <g id="f-ic-headset" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4.2" height="6" rx="1.6"/><rect x="16.8" y="14" width="4.2" height="6" rx="1.6"/><path d="M21 20v0.6a3 3 0 0 1-3 3h-2.6"/>
+    </g>
+    <g id="f-ic-alert" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3.4 22 20.6H2Z"/><path d="M12 9.5v5"/><circle cx="12" cy="17.3" r="0.9" fill="currentColor" stroke="none"/>
+    </g>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="1000" fill="#070b14"/>
+  <rect x="0" y="0" width="1180" height="1000" fill="url(#grade-fundo2)"/>
+
+  <g transform="translate(60,50)">
+    <text class="eyebrow" x="0" y="0">DBS TELECOM — SUPORTE</text>
+    <text class="titulo-svg" x="0" y="42" fill="url(#grad-titulo2)">Pré-diagnóstico de Suporte</text>
+    <text class="subtitulo-svg" x="0" y="70">Roteiro fixo (services/support_flow.py) — desfecho N1 (remoto) ou N2 (visita técnica)</text>
+  </g>
+
+  <g transform="translate(0,150)">
+    <!-- Painel: roteiro fixo -->
+    <g>
+      <rect class="painel" x="60" y="0" width="620" height="482" rx="16" stroke="#35e7ff" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#35e7ff" d="M60,24 V8 a8,8 0 0 1 8,-8 H84"/>
+      <path class="canto" stroke="#35e7ff" d="M680,24 V8 a8,8 0 0 0 -8,-8 H656"/>
+      <text class="painel-titulo" x="82" y="26" fill="#35e7ff">PRÉ-DIAGNÓSTICO — ROTEIRO FIXO</text>
+      <text class="painel-legenda" x="82" y="42">perguntas fixas em código, não dependem do modelo lembrar a ordem</text>
+
+      <rect class="no-caixa" x="110" y="60" width="520" height="80" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="128" y="75" width="40" height="40" rx="10"/>
+      <use href="#f-ic-chat" x="134" y="81" width="28" height="28" color="#35e7ff" filter="url(#f-brilho-cyan)"/>
+      <text class="no-nome" x="182" y="95">1. Múltiplos aparelhos?</text>
+      <text class="no-legenda" x="182" y="113">acontece em mais de um dispositivo, ou só nesse?</text>
+
+      <rect class="no-caixa" x="110" y="164" width="520" height="80" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="128" y="179" width="40" height="40" rx="10"/>
+      <use href="#f-ic-chat" x="134" y="185" width="28" height="28" color="#35e7ff" filter="url(#f-brilho-cyan)"/>
+      <text class="no-nome" x="182" y="199">2. Cabos conectados?</text>
+      <text class="no-legenda" x="182" y="217">roteador/ONU sem folga ou dano aparente</text>
+
+      <rect class="no-caixa" x="110" y="268" width="520" height="80" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="128" y="283" width="40" height="40" rx="10"/>
+      <use href="#f-ic-chat" x="134" y="289" width="28" height="28" color="#35e7ff" filter="url(#f-brilho-cyan)"/>
+      <text class="no-nome" x="182" y="303">3. Reiniciar o equipamento</text>
+      <text class="no-legenda" x="182" y="321">desligar da tomada, aguardar 30s, religar</text>
+
+      <rect class="no-caixa" x="110" y="372" width="520" height="90" rx="12" stroke="#f84b03" stroke-width="1.8"/>
+      <rect class="no-icone-fundo" x="128" y="389" width="44" height="44" rx="11"/>
+      <use href="#f-ic-chat" x="135" y="396" width="30" height="30" color="#f84b03" filter="url(#f-brilho-orange)"/>
+      <text class="no-nome" x="186" y="410" fill="#ffd9bd">4. Resolveu?</text>
+      <text class="no-legenda" x="186" y="428">decide o desfecho — sim ou não</text>
+
+      <path id="f-p1" class="fio" stroke="#35e7ff" d="M370,140 V164" marker-end="url(#f-seta-cyan)"/>
+      <circle r="2.4" fill="#35e7ff" class="flow-dot"><animateMotion dur="1.4s" repeatCount="indefinite"><mpath href="#f-p1"/></animateMotion></circle>
+      <path id="f-p2" class="fio" stroke="#35e7ff" d="M370,244 V268" marker-end="url(#f-seta-cyan)"/>
+      <circle r="2.4" fill="#35e7ff" class="flow-dot"><animateMotion dur="1.4s" repeatCount="indefinite"><mpath href="#f-p2"/></animateMotion></circle>
+      <path id="f-p3" class="fio" stroke="#f84b03" d="M370,348 V372" marker-end="url(#f-seta-orange)"/>
+      <circle r="2.4" fill="#f84b03" class="flow-dot"><animateMotion dur="1.4s" repeatCount="indefinite"><mpath href="#f-p3"/></animateMotion></circle>
+    </g>
+
+    <!-- Painel: N2 -->
+    <g>
+      <rect class="painel" x="740" y="140" width="380" height="220" rx="16" stroke="#ff5470" stroke-opacity="0.4"/>
+      <path class="canto" stroke="#ff5470" d="M740,164 V148 a8,8 0 0 1 8,-8 H764"/>
+      <path class="canto" stroke="#ff5470" d="M1120,164 V148 a8,8 0 0 0 -8,-8 H1096"/>
+      <text class="painel-titulo" x="762" y="166" fill="#ff5470">DESFECHO N2</text>
+      <text class="painel-legenda" x="762" y="182">dano físico — não resolve remoto</text>
+
+      <rect class="no-caixa" x="770" y="200" width="320" height="130" rx="12" stroke="#ff5470"/>
+      <rect class="no-icone-fundo" x="792" y="218" width="44" height="44" rx="11"/>
+      <use href="#f-ic-alert" x="799" y="225" width="30" height="30" color="#ff5470" filter="url(#f-brilho-red)"/>
+      <text class="no-nome" x="850" y="238">Visita técnica agendada</text>
+      <text class="no-legenda" x="850" y="256">cabo cortado, sem luz — qualquer etapa</text>
+      <text class="no-legenda" x="850" y="272">schedule_technical_visit → su_oss_chamado</text>
+      <text class="no-legenda" x="850" y="288">prioridade alta</text>
+    </g>
+
+    <path class="fio fio-tracejado" stroke="#ff5470" d="M632,220 C690,220 700,240 738,248" marker-end="url(#f-seta-red)"/>
+    <rect class="fio-rotulo-fundo" x="600" y="90" width="230" height="22" rx="6"/>
+    <text class="fio-rotulo" x="715" y="106" text-anchor="middle" fill="#ff5470">sinal de dano físico (qualquer etapa)</text>
+
+    <!-- Desfechos N1 -->
+    <rect class="no-caixa" x="60" y="522" width="290" height="110" rx="12" stroke="#35ffa6"/>
+    <rect class="no-icone-fundo" x="82" y="540" width="42" height="42" rx="10"/>
+    <use href="#f-ic-check" x="89" y="547" width="28" height="28" color="#35ffa6" filter="url(#f-brilho-green)"/>
+    <text class="no-nome" x="138" y="562">Resolvido</text>
+    <text class="no-legenda" x="138" y="580">encerra + sugere</text>
+    <text class="no-legenda" x="138" y="594">upgrade se fizer sentido</text>
+
+    <rect class="no-caixa" x="390" y="522" width="290" height="110" rx="12" stroke="#ff8a3d"/>
+    <rect class="no-icone-fundo" x="412" y="540" width="42" height="42" rx="10"/>
+    <use href="#f-ic-headset" x="419" y="547" width="28" height="28" color="#ff8a3d" filter="url(#f-brilho-amber)"/>
+    <text class="no-nome" x="468" y="562">Escalona Suporte (N1)</text>
+    <text class="no-legenda" x="468" y="580">log_support_escalation</text>
+    <text class="no-legenda" x="468" y="594">fila de atendimento remoto</text>
+
+    <path id="f-p-sim" class="fio" stroke="#35ffa6" d="M300,462 C260,490 230,500 210,520" marker-end="url(#f-seta-green)"/>
+    <rect class="fio-rotulo-fundo" x="215" y="472" width="46" height="20" rx="5"/>
+    <text class="fio-rotulo" x="238" y="486" text-anchor="middle" fill="#35ffa6">sim</text>
+    <circle r="2.6" fill="#35ffa6" class="flow-dot"><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#f-p-sim"/></animateMotion></circle>
+
+    <path id="f-p-nao" class="fio" stroke="#ff8a3d" d="M440,462 C480,490 500,500 530,520" marker-end="url(#f-seta-amber)"/>
+    <rect class="fio-rotulo-fundo" x="415" y="472" width="52" height="20" rx="5"/>
+    <text class="fio-rotulo" x="441" y="486" text-anchor="middle" fill="#ff8a3d">não</text>
+    <circle r="2.6" fill="#ff8a3d" class="flow-dot"><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#f-p-nao"/></animateMotion></circle>
+
+    <text class="rodape" x="590" y="700" text-anchor="middle">Interpretação da resposta livre usa heurística de palavra-chave — a ordem das perguntas nunca depende do modelo "lembrar"</text>
+  </g>
+</svg>

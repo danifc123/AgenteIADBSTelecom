@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 700" font-family="Consolas, Menlo, monospace">
+  <rect x="0" y="0" width="520" height="700" fill="#15161A"/>
+  <text x="40" y="34" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#F2F2F3">mobile/</text>
+
+  <g font-size="13">
+    <text x="40" y="70" fill="#D8D9DC">App.tsx</text>
+    <text x="40" y="90" fill="#D8D9DC">index.ts</text>
+    <text x="40" y="110" fill="#D8D9DC">app.json</text>
+    <text x="40" y="130" fill="#D8D9DC">package.json</text>
+    <text x="40" y="150" fill="#FB8200" font-weight="700">src/</text>
+    <text x="64" y="170" fill="#FF9A3D" font-weight="700">screens/</text>
+    <text x="88" y="190" fill="#D8D9DC">HomeScreen.tsx</text>
+    <text x="88" y="210" fill="#D8D9DC">IdentificationScreen.tsx</text>
+    <text x="88" y="230" fill="#D8D9DC">ChatScreen.tsx</text>
+    <text x="64" y="250" fill="#FF9A3D" font-weight="700">components/</text>
+    <text x="88" y="270" fill="#D8D9DC">ChatBubble.tsx</text>
+    <text x="88" y="290" fill="#D8D9DC">DepartmentBadge.tsx</text>
+    <text x="88" y="310" fill="#D8D9DC">QuickReplyButtons.tsx</text>
+    <text x="88" y="330" fill="#D8D9DC">TypingIndicator.tsx</text>
+    <text x="88" y="350" fill="#D8D9DC">DbsLogo.tsx</text>
+    <text x="64" y="370" fill="#FF9A3D" font-weight="700">navigation/</text>
+    <text x="88" y="390" fill="#D8D9DC">AppNavigator.tsx</text>
+    <text x="64" y="410" fill="#FF9A3D" font-weight="700">services/</text>
+    <text x="88" y="430" fill="#D8D9DC">apiClient.ts</text>
+    <text x="88" y="450" fill="#D8D9DC">chatService.ts</text>
+    <text x="88" y="470" fill="#D8D9DC">identificationService.ts</text>
+    <text x="64" y="490" fill="#FF9A3D" font-weight="700">domain/</text>
+    <text x="88" y="510" fill="#D8D9DC">types.ts</text>
+    <text x="64" y="530" fill="#FF9A3D" font-weight="700">theme/</text>
+    <text x="88" y="550" fill="#D8D9DC">colors.ts</text>
+    <text x="88" y="570" fill="#D8D9DC">typography.ts</text>
+    <text x="88" y="590" fill="#D8D9DC">paperTheme.ts</text>
+    <text x="64" y="610" fill="#FF9A3D" font-weight="700">context/</text>
+    <text x="88" y="630" fill="#D8D9DC">SessionContext.tsx</text>
+  </g>
+
+  <text x="480" y="685" text-anchor="end" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#5B5C61">DBS TELECOM</text>
+</svg>

@@ -1,0 +1,180 @@
+<svg viewBox="0 0 1180 1400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="titulo-svg desc-svg">
+  <title id="titulo-svg">Arquitetura do sistema DBS TELECOM</title>
+  <desc id="desc-svg">App Mobile React Native/Expo fala REST/JSON com o Backend FastAPI (api/routes, services/, services/ai/, integrations/); services/ai/ chama o Ollama Cloud via tool-calling e integrations/ chama a API da IXC via httpx.</desc>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap');
+    text { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; }
+    .eyebrow { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.28em; fill: #f8843d; opacity: 0.9; }
+    .titulo-svg { font-family: 'Chakra Petch', 'Segoe UI', sans-serif; font-weight: 700; font-size: 32px; }
+    .subtitulo-svg { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; fill: #8291b3; }
+    .painel { fill: #0d1526; stroke-width: 1.25; }
+    .painel-titulo { font-family: 'Chakra Petch', 'Segoe UI', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.14em; }
+    .painel-legenda { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; fill: #4c5773; }
+    .canto { stroke-width: 2; fill: none; opacity: 0.9; }
+    .no-caixa { fill: #101c33; stroke-width: 1.4; }
+    .no-icone-fundo { fill: rgba(255,255,255,0.03); }
+    .no-nome { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; font-weight: 600; font-size: 15px; fill: #eaf1ff; }
+    .no-legenda { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; fill: #8291b3; }
+    .no-hero .no-nome { font-size: 16.5px; }
+    .fio { fill: none; stroke-width: 1.6; opacity: 0.6; }
+    .fio-rotulo { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 500; font-size: 13px; }
+    .fio-rotulo-fundo { fill: #070b14; opacity: 0.86; }
+    .flow-dot { filter: drop-shadow(0 0 4px currentColor); }
+    .rodape { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; fill: #4c5773; }
+    @media (prefers-reduced-motion: reduce) { .flow-dot { display: none; } }
+  </style>
+
+  <defs>
+    <linearGradient id="grad-titulo" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#ffb066"/><stop offset="100%" stop-color="#f84b03"/>
+    </linearGradient>
+    <pattern id="grade-fundo" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="rgba(248,75,3,0.055)" stroke-width="1"/>
+    </pattern>
+    <marker id="seta-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#35e7ff"/></marker>
+    <marker id="seta-violet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#b48bff"/></marker>
+    <marker id="seta-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#ff8a3d"/></marker>
+    <marker id="seta-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#f84b03"/></marker>
+    <filter id="brilho-cyan" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-violet" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-orange" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-amber" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+
+    <g id="ic-phone" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="7" y="2" width="10" height="20" rx="2.2"/><circle cx="12" cy="18.4" r="0.9" fill="currentColor" stroke="none"/>
+    </g>
+    <g id="ic-globe" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.2"/><path d="M4 12h16M12 3.8c2.6 2.4 2.6 14 0 16.4M12 3.8c-2.6 2.4-2.6 14 0 16.4"/>
+    </g>
+    <g id="ic-gear" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.1"/><path d="M12 3v2.6M12 18.4V21M21 12h-2.6M5.6 12H3M18.5 5.5l-1.9 1.9M7.4 16.7l-1.9 1.9M18.5 18.5l-1.9-1.9M7.4 7.3 5.5 5.5"/>
+    </g>
+    <g id="ic-brain" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1.4 5.5A3 3 0 0 0 7 18h1"/>
+      <path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1.4 5.5A3 3 0 0 1 17 18h-1"/>
+      <path d="M9 4v14M15 4v14M9.3 9h2M12.7 9h2M9.3 13h2M12.7 13h2"/>
+    </g>
+    <g id="ic-plug" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 2v6M15 2v6M6 8h12l-1 4a5 5 0 0 1-10 0Z"/><path d="M12 16v6"/>
+    </g>
+    <g id="ic-cloud" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18a4 4 0 0 1-.5-7.97A5 5 0 0 1 16 8a4.5 4.5 0 0 1 1 8.9"/><path d="M7 18h9.5"/>
+    </g>
+    <g id="ic-db" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>
+    </g>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="1400" fill="#070b14"/>
+  <rect x="0" y="0" width="1180" height="1400" fill="url(#grade-fundo)"/>
+
+  <g transform="translate(60,50)">
+    <text class="eyebrow" x="0" y="0">DBS TELECOM — DESAFIO TÉCNICO</text>
+    <text class="titulo-svg" x="0" y="42" fill="url(#grad-titulo)">Arquitetura do sistema</text>
+    <text class="subtitulo-svg" x="0" y="70">App Mobile · Backend FastAPI em camadas · Ollama Cloud (tool-calling) · IXC (webservice)</text>
+  </g>
+
+  <g transform="translate(0,150)">
+    <!-- Camada de Apresentação -->
+    <g>
+      <rect class="painel" x="290" y="0" width="600" height="170" rx="16" stroke="#b48bff" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#b48bff" d="M290,24 V8 a8,8 0 0 1 8,-8 H314"/>
+      <path class="canto" stroke="#b48bff" d="M890,24 V8 a8,8 0 0 0 -8,-8 H866"/>
+      <text class="painel-titulo" x="312" y="26" fill="#b48bff">CAMADA DE APRESENTAÇÃO</text>
+      <text class="painel-legenda" x="312" y="42">único cliente do backend</text>
+
+      <rect class="no-caixa" x="340" y="55" width="500" height="95" rx="12" stroke="#b48bff"/>
+      <rect class="no-icone-fundo" x="368" y="75" width="40" height="40" rx="10"/>
+      <use href="#ic-phone" x="374" y="81" width="28" height="28" color="#b48bff" filter="url(#brilho-violet)"/>
+      <text class="no-nome" x="428" y="98">App Mobile</text>
+      <text class="no-legenda" x="428" y="116">React Native + Expo — nunca fala com a IXC direto</text>
+    </g>
+
+    <!-- Camada de Aplicação -->
+    <g>
+      <rect class="painel" x="190" y="250" width="800" height="600" rx="16" stroke="#35e7ff" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#35e7ff" d="M190,274 V258 a8,8 0 0 1 8,-8 H214"/>
+      <path class="canto" stroke="#35e7ff" d="M990,274 V258 a8,8 0 0 0 -8,-8 H966"/>
+      <text class="painel-titulo" x="212" y="276" fill="#35e7ff">CAMADA DE APLICAÇÃO — BACKEND FASTAPI</text>
+      <text class="painel-legenda" x="212" y="292">api → services → integrations/domain, nunca ao contrário</text>
+
+      <!-- api/routes -->
+      <rect class="no-caixa" x="340" y="310" width="500" height="80" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="360" y="325" width="40" height="40" rx="10"/>
+      <use href="#ic-globe" x="366" y="331" width="28" height="28" color="#35e7ff" filter="url(#brilho-cyan)"/>
+      <text class="no-nome" x="414" y="345">api/routes</text>
+      <text class="no-legenda" x="414" y="363">chat · identification · health</text>
+
+      <!-- services/ -->
+      <rect class="no-caixa" x="340" y="410" width="500" height="80" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="360" y="425" width="40" height="40" rx="10"/>
+      <use href="#ic-gear" x="366" y="431" width="28" height="28" color="#35e7ff" filter="url(#brilho-cyan)"/>
+      <text class="no-nome" x="414" y="445">services/</text>
+      <text class="no-legenda" x="414" y="463">chat_service · identification_service · support_flow</text>
+
+      <!-- services/ai/ (hero) -->
+      <rect class="no-caixa no-hero" x="340" y="510" width="500" height="100" rx="12" stroke="#f84b03" stroke-width="1.8"/>
+      <rect class="no-icone-fundo" x="360" y="530" width="46" height="46" rx="11"/>
+      <use href="#ic-brain" x="367" y="537" width="32" height="32" color="#f84b03" filter="url(#brilho-orange)"/>
+      <text class="no-nome" x="420" y="553" fill="#ffd9bd">services/ai/</text>
+      <text class="no-legenda" x="420" y="572">ollama_client · mcp_client · classifier</text>
+      <text class="no-legenda" x="420" y="588">prompts · tool_schema</text>
+
+      <!-- integrations/ -->
+      <rect class="no-caixa" x="340" y="640" width="500" height="90" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="360" y="658" width="40" height="40" rx="10"/>
+      <use href="#ic-plug" x="366" y="664" width="28" height="28" color="#35e7ff" filter="url(#brilho-cyan)"/>
+      <text class="no-nome" x="414" y="678">integrations/</text>
+      <text class="no-legenda" x="414" y="696">ixc/client (httpx) · mcp_server (subprocess, stdio)</text>
+
+      <!-- internal chain arrows -->
+      <path id="p-int1" class="fio" stroke="#35e7ff" d="M590,390 V410" marker-end="url(#seta-cyan)"/>
+      <circle r="2.6" fill="#35e7ff" class="flow-dot"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p-int1"/></animateMotion></circle>
+      <path id="p-int2" class="fio" stroke="#35e7ff" d="M590,490 V510" marker-end="url(#seta-cyan)"/>
+      <circle r="2.6" fill="#35e7ff" class="flow-dot"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p-int2"/></animateMotion></circle>
+      <path id="p-int3" class="fio" stroke="#f84b03" d="M590,610 V640" marker-end="url(#seta-orange)"/>
+      <circle r="2.6" fill="#f84b03" class="flow-dot"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p-int3"/></animateMotion></circle>
+    </g>
+
+    <!-- Camada Externa -->
+    <g>
+      <rect class="painel" x="150" y="920" width="880" height="200" rx="16" stroke="#ff8a3d" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#ff8a3d" d="M150,944 V928 a8,8 0 0 1 8,-8 H174"/>
+      <path class="canto" stroke="#ff8a3d" d="M1030,944 V928 a8,8 0 0 0 -8,-8 H1006"/>
+      <text class="painel-titulo" x="172" y="946" fill="#ff8a3d">CAMADA EXTERNA</text>
+      <text class="painel-legenda" x="172" y="962">serviços de terceiros — fora do controle do projeto</text>
+
+      <rect class="no-caixa" x="220" y="975" width="330" height="115" rx="12" stroke="#35e7ff"/>
+      <rect class="no-icone-fundo" x="250" y="995" width="42" height="42" rx="10"/>
+      <use href="#ic-cloud" x="257" y="1002" width="28" height="28" color="#35e7ff" filter="url(#brilho-cyan)"/>
+      <text class="no-nome" x="308" y="1020">Ollama Cloud</text>
+      <text class="no-legenda" x="308" y="1038">tool-calling · gratuito</text>
+      <text class="no-legenda" x="308" y="1054">nemotron-3-nano:30b-cloud</text>
+
+      <rect class="no-caixa" x="610" y="975" width="330" height="115" rx="12" stroke="#ff8a3d"/>
+      <rect class="no-icone-fundo" x="640" y="995" width="42" height="42" rx="10"/>
+      <use href="#ic-db" x="647" y="1002" width="28" height="28" color="#ff8a3d" filter="url(#brilho-amber)"/>
+      <text class="no-nome" x="698" y="1020">IXC API</text>
+      <text class="no-legenda" x="698" y="1038">demo.ixcsoft.com.br</text>
+      <text class="no-legenda" x="698" y="1054">cliente · boleto · plano · chamado</text>
+    </g>
+
+    <!-- Cross-layer edges -->
+    <path id="p-mobile" class="fio" stroke="#b48bff" d="M590,150 V310" marker-end="url(#seta-violet)"/>
+    <rect class="fio-rotulo-fundo" x="530" y="212" width="120" height="22" rx="6"/>
+    <text class="fio-rotulo" x="590" y="228" text-anchor="middle" fill="#b48bff">REST / JSON</text>
+    <circle r="3" fill="#b48bff" class="flow-dot"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#p-mobile"/></animateMotion></circle>
+
+    <path id="p-ollama" class="fio" stroke="#35e7ff" d="M840,555 C930,600 960,700 720,975" marker-end="url(#seta-cyan)"/>
+    <rect class="fio-rotulo-fundo" x="835" y="700" width="120" height="22" rx="6"/>
+    <text class="fio-rotulo" x="895" y="716" text-anchor="middle" fill="#35e7ff">tool-calling</text>
+    <circle r="3" fill="#35e7ff" class="flow-dot"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#p-ollama"/></animateMotion></circle>
+
+    <path id="p-ixc" class="fio" stroke="#ff8a3d" d="M840,685 C900,780 830,880 775,975" marker-end="url(#seta-amber)"/>
+    <rect class="fio-rotulo-fundo" x="805" y="850" width="120" height="22" rx="6"/>
+    <text class="fio-rotulo" x="865" y="866" text-anchor="middle" fill="#ff8a3d">httpx / webservice</text>
+    <circle r="3" fill="#ff8a3d" class="flow-dot"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#p-ixc"/></animateMotion></circle>
+
+    <text class="rodape" x="590" y="1170" text-anchor="middle">Não é arquitetura RAG — tool-calling estruturado (via MCP) contra dados transacionais reais</text>
+  </g>
+</svg>
