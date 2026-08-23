@@ -1,0 +1,23 @@
+{
+  "planos_urbanos": [
+    { "nome": "SEJA DBS 400MB", "velocidade": "400MB", "valor": 109.90, "condicao": "Valor fixo" },
+    { "nome": "IDEAL DBS 500MB", "velocidade": "500MB", "valor": 139.90, "valor_com_desconto_pontualidade": 119.90, "condicao": "Com pagamento até o vencimento" },
+    { "nome": "ESSENCIAL DBS 600MB", "velocidade": "600MB", "valor": 149.90, "valor_com_desconto_pontualidade": 139.90, "condicao": "Com pagamento até o vencimento" },
+    { "nome": "ENTRETENIMENTO DBS 800MB", "velocidade": "800MB", "valor": 159.90, "condicao": "Valor fixo" },
+    { "nome": "HARD DBS 1GB", "velocidade": "1GB", "valor": 249.90, "condicao": "Valor fixo" },
+    { "nome": "RETENÇÃO DBS 300MB", "velocidade": "300MB", "valor": 89.90, "condicao": "Casos de extrema necessidade (uso restrito, não ofertar espontaneamente)" }
+  ],
+  "planos_wifi6": [
+    { "banda": "500MB", "valor": 119.90, "ponto_adicional": 19.90 },
+    { "banda": "600MB", "valor": 129.90, "ponto_adicional": 19.90 },
+    { "banda": "800MB", "valor": 159.90, "ponto_adicional": 19.90 },
+    { "banda": "1000MB", "valor": 189.90, "ponto_adicional": 19.90 }
+  ],
+  "ativacao": {
+    "com_fidelidade": "12 meses, sem custo de ativação, multa por quebra de contrato dentro do período.",
+    "sem_fidelidade": {
+      "valor": 600.00,
+      "condicoes_pagamento": ["Entrada + 4x", "5x no cartão de crédito", "À vista no ato da ativação"]
+    }
+  }
+}
