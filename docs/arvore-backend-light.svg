@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 780" font-family="Consolas, Menlo, monospace">
+  <rect x="0" y="0" width="520" height="780" fill="#FFFFFF"/>
+  <text x="40" y="34" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#4B4C51">backend/app/</text>
+
+  <g font-size="13">
+    <text x="40" y="70" fill="#4B4C51">main.py</text>
+    <text x="40" y="90" fill="#F84B03" font-weight="700">core/</text>
+    <text x="64" y="110" fill="#4B4C51">config.py</text>
+    <text x="64" y="130" fill="#4B4C51">logging_config.py</text>
+    <text x="64" y="150" fill="#4B4C51">session_store.py</text>
+    <text x="40" y="170" fill="#F84B03" font-weight="700">domain/</text>
+    <text x="64" y="190" fill="#4B4C51">models.py</text>
+    <text x="40" y="210" fill="#F84B03" font-weight="700">api/</text>
+    <text x="64" y="230" fill="#4B4C51">deps.py</text>
+    <text x="64" y="250" fill="#F84B03" font-weight="700">routes/</text>
+    <text x="88" y="270" fill="#4B4C51">chat.py</text>
+    <text x="88" y="290" fill="#4B4C51">identification.py</text>
+    <text x="88" y="310" fill="#4B4C51">health.py</text>
+    <text x="40" y="330" fill="#F84B03" font-weight="700">services/</text>
+    <text x="64" y="350" fill="#4B4C51">chat_service.py</text>
+    <text x="64" y="370" fill="#4B4C51">identification_service.py</text>
+    <text x="64" y="390" fill="#4B4C51">support_flow.py</text>
+    <text x="64" y="410" fill="#FB8200" font-weight="700">ai/</text>
+    <text x="88" y="430" fill="#4B4C51">ollama_client.py</text>
+    <text x="88" y="450" fill="#4B4C51">mcp_client.py</text>
+    <text x="88" y="470" fill="#4B4C51">classifier.py</text>
+    <text x="88" y="490" fill="#4B4C51">prompts.py</text>
+    <text x="88" y="510" fill="#4B4C51">tool_schema.py</text>
+    <text x="40" y="530" fill="#F84B03" font-weight="700">integrations/</text>
+    <text x="64" y="550" fill="#FB8200" font-weight="700">ixc/</text>
+    <text x="88" y="570" fill="#4B4C51">client.py</text>
+    <text x="88" y="590" fill="#4B4C51">schemas.py</text>
+    <text x="88" y="610" fill="#4B4C51">static_data.py</text>
+    <text x="64" y="630" fill="#FB8200" font-weight="700">mcp_server/</text>
+    <text x="88" y="650" fill="#4B4C51">server.py</text>
+    <text x="40" y="670" fill="#F84B03" font-weight="700">data/</text>
+    <text x="64" y="690" fill="#4B4C51">plans.json</text>
+    <text x="40" y="710" fill="#4B4C51">tests/  — 29 testes automatizados (pytest)</text>
+  </g>
+
+  <text x="480" y="765" text-anchor="end" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10.5" fill="#B9BABD">DBS TELECOM</text>
+</svg>
