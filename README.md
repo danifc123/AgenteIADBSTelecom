@@ -311,13 +311,11 @@ Classificação → loop de tool-calling do Ollama com acesso a `list_plans` (ca
 ### 3. Suporte (com pré-diagnóstico real)
 Não escalona direto. Roda uma máquina de estados determinística (`services/support_flow.py`) com o roteiro fixo exigido:
 
-```
-Múltiplos aparelhos? → Cabos conectados? → Reiniciar equipamento → Resolveu?
-                                                                        |
-                              ┌─────────────────────────────────────────┤
-                              ▼                                         ▼
-                     Resolvido (encerra)              Não resolveu → escalona N1
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/fluxo-suporte-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/fluxo-suporte-light.svg">
+  <img src="docs/fluxo-suporte-light.svg" alt="Máquina de estados do pré-diagnóstico de Suporte: pergunta se há múltiplos aparelhos, depois se os cabos estão conectados, depois sugere reiniciar o equipamento, depois pergunta se resolveu — se sim, encerra com sugestão de upgrade; se não, escalona para Suporte N1 (fila remota). Sinal de dano físico detectado em qualquer etapa pula direto para o desfecho N2 (visita técnica agendada)." width="100%">
+</picture>
 
 **Desfecho N1 vs N2**: se em qualquer etapa o cliente mencionar sinal de dano físico ("cabo cortado", "sem luz no equipamento", ou até algo mais vago como "meu cabo tá com problema"), o fluxo pula direto para o agendamento de visita técnica (N2) em vez de insistir em passos remotos que não resolveriam. Se os passos remotos não resolverem sem sinal de dano físico, escalona para a fila de Suporte (N1). As perguntas em si são fixas (não dependem do modelo "lembrar" de perguntar tudo) — só a interpretação da resposta do cliente usa heurística de palavra-chave.
 

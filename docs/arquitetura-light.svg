@@ -1,70 +1,175 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<svg viewBox="0 0 1180 1400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="titulo-svg-l desc-svg-l">
+  <title id="titulo-svg-l">Arquitetura do sistema DBS TELECOM</title>
+  <desc id="desc-svg-l">App Mobile React Native/Expo fala REST/JSON com o Backend FastAPI (api/routes, services/, services/ai/, integrations/); services/ai/ chama o Ollama Cloud via tool-calling e integrations/ chama a API da IXC via httpx.</desc>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap');
+    text { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; }
+    .eyebrow { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.28em; fill: #c2670a; opacity: 0.9; }
+    .titulo-svg { font-family: 'Chakra Petch', 'Segoe UI', sans-serif; font-weight: 700; font-size: 32px; }
+    .subtitulo-svg { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; fill: #5b6b82; }
+    .painel { fill: #ffffff; stroke-width: 1.25; }
+    .painel-titulo { font-family: 'Chakra Petch', 'Segoe UI', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.14em; }
+    .painel-legenda { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; fill: #8a97ab; }
+    .canto { stroke-width: 2; fill: none; opacity: 0.9; }
+    .no-caixa { fill: #f4f7fb; stroke-width: 1.4; }
+    .no-icone-fundo { fill: rgba(22,32,46,0.04); }
+    .no-nome { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; font-weight: 600; font-size: 15px; fill: #16202e; }
+    .no-legenda { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; fill: #5b6b82; }
+    .no-hero .no-nome { font-size: 16.5px; }
+    .fio { fill: none; stroke-width: 1.6; opacity: 0.7; }
+    .fio-rotulo { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 500; font-size: 13px; }
+    .fio-rotulo-fundo { fill: #ffffff; opacity: 0.9; }
+    .flow-dot { filter: drop-shadow(0 0 4px currentColor); }
+    .rodape { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; fill: #8a97ab; }
+    @media (prefers-reduced-motion: reduce) { .flow-dot { display: none; } }
+  </style>
+
   <defs>
-    <marker id="arrow-light" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#4B4C51"/>
-    </marker>
+    <linearGradient id="grad-titulo-l" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#16202e"/><stop offset="55%" stop-color="#e5590a"/><stop offset="100%" stop-color="#f84b03"/>
+    </linearGradient>
+    <pattern id="grade-fundo-l" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="rgba(248,75,3,0.06)" stroke-width="1"/>
+    </pattern>
+    <marker id="seta-cyan-l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#0891b2"/></marker>
+    <marker id="seta-violet-l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#7c3aed"/></marker>
+    <marker id="seta-amber-l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#c2670a"/></marker>
+    <marker id="seta-orange-l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" fill="#f84b03"/></marker>
+    <filter id="brilho-cyan-l" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-violet-l" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-orange-l" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-amber-l" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+
+    <g id="ic-phone-l" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="7" y="2" width="10" height="20" rx="2.2"/><circle cx="12" cy="18.4" r="0.9" fill="currentColor" stroke="none"/>
+    </g>
+    <g id="ic-globe-l" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.2"/><path d="M4 12h16M12 3.8c2.6 2.4 2.6 14 0 16.4M12 3.8c-2.6 2.4-2.6 14 0 16.4"/>
+    </g>
+    <g id="ic-gear-l" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.1"/><path d="M12 3v2.6M12 18.4V21M21 12h-2.6M5.6 12H3M18.5 5.5l-1.9 1.9M7.4 16.7l-1.9 1.9M18.5 18.5l-1.9-1.9M7.4 7.3 5.5 5.5"/>
+    </g>
+    <g id="ic-brain-l" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1.4 5.5A3 3 0 0 0 7 18h1"/>
+      <path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1.4 5.5A3 3 0 0 1 17 18h-1"/>
+      <path d="M9 4v14M15 4v14M9.3 9h2M12.7 9h2M9.3 13h2M12.7 13h2"/>
+    </g>
+    <g id="ic-plug-l" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 2v6M15 2v6M6 8h12l-1 4a5 5 0 0 1-10 0Z"/><path d="M12 16v6"/>
+    </g>
+    <g id="ic-cloud-l" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 18a4 4 0 0 1-.5-7.97A5 5 0 0 1 16 8a4.5 4.5 0 0 1 1 8.9"/><path d="M7 18h9.5"/>
+    </g>
+    <g id="ic-db-l" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>
+    </g>
   </defs>
 
-  <rect x="0" y="0" width="900" height="560" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1180" height="1400" fill="#f7f9fc"/>
+  <rect x="0" y="0" width="1180" height="1400" fill="url(#grade-fundo-l)"/>
 
-  <!-- App Mobile -->
-  <rect x="30" y="60" width="200" height="90" rx="10" fill="#FFF4EC" stroke="#F84B03" stroke-width="2"/>
-  <text x="130" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#4B4C51">App Mobile</text>
-  <text x="130" y="120" text-anchor="middle" font-size="12" fill="#4B4C51">React Native + Expo</text>
-  <text x="130" y="138" text-anchor="middle" font-size="11" fill="#7A7B80">nunca fala com a IXC direto</text>
+  <g transform="translate(60,50)">
+    <text class="eyebrow" x="0" y="0">DBS TELECOM — DESAFIO TÉCNICO</text>
+    <text class="titulo-svg" x="0" y="42" fill="url(#grad-titulo-l)">Arquitetura do sistema</text>
+    <text class="subtitulo-svg" x="0" y="70">App Mobile · Backend FastAPI em camadas · Ollama Cloud (tool-calling) · IXC (webservice)</text>
+  </g>
 
-  <!-- Backend outer box -->
-  <rect x="290" y="20" width="330" height="500" rx="12" fill="#FCFCFC" stroke="#4B4C51" stroke-width="2"/>
-  <text x="455" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#4B4C51">Backend FastAPI</text>
+  <g transform="translate(0,150)">
+    <!-- Camada de Apresentação -->
+    <g>
+      <rect class="painel" x="290" y="0" width="600" height="170" rx="16" stroke="#7c3aed" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#7c3aed" d="M290,24 V8 a8,8 0 0 1 8,-8 H314"/>
+      <path class="canto" stroke="#7c3aed" d="M890,24 V8 a8,8 0 0 0 -8,-8 H866"/>
+      <text class="painel-titulo" x="312" y="26" fill="#7c3aed">CAMADA DE APRESENTAÇÃO</text>
+      <text class="painel-legenda" x="312" y="42">único cliente do backend</text>
 
-  <!-- api/routes -->
-  <rect x="315" y="60" width="280" height="46" rx="8" fill="#FFF4EC" stroke="#FB8200" stroke-width="1.5"/>
-  <text x="455" y="88" text-anchor="middle" font-size="12.5" fill="#4B4C51">api/routes — chat, identification, health</text>
+      <rect class="no-caixa" x="340" y="55" width="500" height="95" rx="12" stroke="#7c3aed"/>
+      <rect class="no-icone-fundo" x="368" y="75" width="40" height="40" rx="10"/>
+      <use href="#ic-phone-l" x="374" y="81" width="28" height="28" color="#7c3aed" filter="url(#brilho-violet-l)"/>
+      <text class="no-nome" x="428" y="98">App Mobile</text>
+      <text class="no-legenda" x="428" y="116">React Native + Expo — nunca fala com a IXC direto</text>
+    </g>
 
-  <!-- services -->
-  <rect x="315" y="118" width="280" height="46" rx="8" fill="#FFF4EC" stroke="#FB8200" stroke-width="1.5"/>
-  <text x="455" y="146" text-anchor="middle" font-size="12.5" fill="#4B4C51">services/ — chat_service, identification, support_flow</text>
+    <!-- Camada de Aplicação -->
+    <g>
+      <rect class="painel" x="190" y="250" width="800" height="600" rx="16" stroke="#0891b2" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#0891b2" d="M190,274 V258 a8,8 0 0 1 8,-8 H214"/>
+      <path class="canto" stroke="#0891b2" d="M990,274 V258 a8,8 0 0 0 -8,-8 H966"/>
+      <text class="painel-titulo" x="212" y="276" fill="#0891b2">CAMADA DE APLICAÇÃO — BACKEND FASTAPI</text>
+      <text class="painel-legenda" x="212" y="292">api → services → integrations/domain, nunca ao contrário</text>
 
-  <!-- services/ai -->
-  <rect x="315" y="176" width="280" height="70" rx="8" fill="#FFF4EC" stroke="#F84B03" stroke-width="2"/>
-  <text x="455" y="197" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4B4C51">services/ai/</text>
-  <text x="455" y="215" text-anchor="middle" font-size="11" fill="#4B4C51">ollama_client · mcp_client · classifier</text>
-  <text x="455" y="230" text-anchor="middle" font-size="11" fill="#4B4C51">prompts · tool_schema</text>
+      <rect class="no-caixa" x="340" y="310" width="500" height="80" rx="12" stroke="#0891b2"/>
+      <rect class="no-icone-fundo" x="360" y="325" width="40" height="40" rx="10"/>
+      <use href="#ic-globe-l" x="366" y="331" width="28" height="28" color="#0891b2" filter="url(#brilho-cyan-l)"/>
+      <text class="no-nome" x="414" y="345">api/routes</text>
+      <text class="no-legenda" x="414" y="363">chat · identification · health</text>
 
-  <!-- integrations -->
-  <rect x="315" y="258" width="280" height="60" rx="8" fill="#FFF4EC" stroke="#FB8200" stroke-width="1.5"/>
-  <text x="455" y="280" text-anchor="middle" font-size="12.5" fill="#4B4C51">integrations/</text>
-  <text x="455" y="298" text-anchor="middle" font-size="11" fill="#4B4C51">ixc/client · mcp_server</text>
+      <rect class="no-caixa" x="340" y="410" width="500" height="80" rx="12" stroke="#0891b2"/>
+      <rect class="no-icone-fundo" x="360" y="425" width="40" height="40" rx="10"/>
+      <use href="#ic-gear-l" x="366" y="431" width="28" height="28" color="#0891b2" filter="url(#brilho-cyan-l)"/>
+      <text class="no-nome" x="414" y="445">services/</text>
+      <text class="no-legenda" x="414" y="463">chat_service · identification_service · support_flow</text>
 
-  <!-- core -->
-  <rect x="315" y="330" width="280" height="46" rx="8" fill="#F4F4F5" stroke="#9A9BA0" stroke-width="1.5"/>
-  <text x="455" y="358" text-anchor="middle" font-size="12" fill="#4B4C51">core/ — config, logging, session_store (memória)</text>
+      <rect class="no-caixa no-hero" x="340" y="510" width="500" height="100" rx="12" stroke="#f84b03" stroke-width="1.8"/>
+      <rect class="no-icone-fundo" x="360" y="530" width="46" height="46" rx="11"/>
+      <use href="#ic-brain-l" x="367" y="537" width="32" height="32" color="#f84b03" filter="url(#brilho-orange-l)"/>
+      <text class="no-nome" x="420" y="553" fill="#c23c02">services/ai/</text>
+      <text class="no-legenda" x="420" y="572">ollama_client · mcp_client · classifier</text>
+      <text class="no-legenda" x="420" y="588">prompts · tool_schema</text>
 
-  <!-- domain -->
-  <rect x="315" y="388" width="280" height="40" rx="8" fill="#F4F4F5" stroke="#9A9BA0" stroke-width="1.5"/>
-  <text x="455" y="412" text-anchor="middle" font-size="12" fill="#4B4C51">domain/ — Customer, Department, SupportStage...</text>
+      <rect class="no-caixa" x="340" y="640" width="500" height="90" rx="12" stroke="#0891b2"/>
+      <rect class="no-icone-fundo" x="360" y="658" width="40" height="40" rx="10"/>
+      <use href="#ic-plug-l" x="366" y="664" width="28" height="28" color="#0891b2" filter="url(#brilho-cyan-l)"/>
+      <text class="no-nome" x="414" y="678">integrations/</text>
+      <text class="no-legenda" x="414" y="696">ixc/client (httpx) · mcp_server (subprocess, stdio)</text>
 
-  <!-- MCP server subprocess -->
-  <rect x="315" y="444" width="280" height="60" rx="8" fill="#FFF4EC" stroke="#FB8200" stroke-width="1.5" stroke-dasharray="5,3"/>
-  <text x="455" y="466" text-anchor="middle" font-size="12" fill="#4B4C51">mcp_server (subprocess, stdio)</text>
-  <text x="455" y="484" text-anchor="middle" font-size="11" fill="#7A7B80">identify_customer, get_boleto, list_plans...</text>
+      <path id="p-int1-l" class="fio" stroke="#0891b2" d="M590,390 V410" marker-end="url(#seta-cyan-l)"/>
+      <circle r="2.6" fill="#0891b2" class="flow-dot"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p-int1-l"/></animateMotion></circle>
+      <path id="p-int2-l" class="fio" stroke="#0891b2" d="M590,490 V510" marker-end="url(#seta-cyan-l)"/>
+      <circle r="2.6" fill="#0891b2" class="flow-dot"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p-int2-l"/></animateMotion></circle>
+      <path id="p-int3-l" class="fio" stroke="#f84b03" d="M590,610 V640" marker-end="url(#seta-orange-l)"/>
+      <circle r="2.6" fill="#f84b03" class="flow-dot"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p-int3-l"/></animateMotion></circle>
+    </g>
 
-  <!-- Ollama Cloud -->
-  <rect x="670" y="176" width="200" height="70" rx="10" fill="#FFF4EC" stroke="#F84B03" stroke-width="2"/>
-  <text x="770" y="205" text-anchor="middle" font-size="14" font-weight="700" fill="#4B4C51">Ollama Cloud</text>
-  <text x="770" y="224" text-anchor="middle" font-size="11" fill="#7A7B80">tool-calling, gratuito</text>
+    <!-- Camada Externa -->
+    <g>
+      <rect class="painel" x="150" y="920" width="880" height="200" rx="16" stroke="#c2670a" stroke-opacity="0.35"/>
+      <path class="canto" stroke="#c2670a" d="M150,944 V928 a8,8 0 0 1 8,-8 H174"/>
+      <path class="canto" stroke="#c2670a" d="M1030,944 V928 a8,8 0 0 0 -8,-8 H1006"/>
+      <text class="painel-titulo" x="172" y="946" fill="#c2670a">CAMADA EXTERNA</text>
+      <text class="painel-legenda" x="172" y="962">serviços de terceiros — fora do controle do projeto</text>
 
-  <!-- IXC API -->
-  <rect x="670" y="258" width="200" height="70" rx="10" fill="#FFF4EC" stroke="#FB8200" stroke-width="2"/>
-  <text x="770" y="286" text-anchor="middle" font-size="14" font-weight="700" fill="#4B4C51">IXC API</text>
-  <text x="770" y="304" text-anchor="middle" font-size="11" fill="#7A7B80">demo.ixcsoft.com.br</text>
+      <rect class="no-caixa" x="220" y="975" width="330" height="115" rx="12" stroke="#0891b2"/>
+      <rect class="no-icone-fundo" x="250" y="995" width="42" height="42" rx="10"/>
+      <use href="#ic-cloud-l" x="257" y="1002" width="28" height="28" color="#0891b2" filter="url(#brilho-cyan-l)"/>
+      <text class="no-nome" x="308" y="1020">Ollama Cloud</text>
+      <text class="no-legenda" x="308" y="1038">tool-calling · gratuito</text>
+      <text class="no-legenda" x="308" y="1054">nemotron-3-nano:30b-cloud</text>
 
-  <!-- Arrows -->
-  <line x1="230" y1="105" x2="290" y2="80" stroke="#4B4C51" stroke-width="1.8" marker-end="url(#arrow-light)"/>
-  <text x="238" y="70" font-size="11" fill="#7A7B80">HTTPS / JSON</text>
+      <rect class="no-caixa" x="610" y="975" width="330" height="115" rx="12" stroke="#c2670a"/>
+      <rect class="no-icone-fundo" x="640" y="995" width="42" height="42" rx="10"/>
+      <use href="#ic-db-l" x="647" y="1002" width="28" height="28" color="#c2670a" filter="url(#brilho-amber-l)"/>
+      <text class="no-nome" x="698" y="1020">IXC API</text>
+      <text class="no-legenda" x="698" y="1038">demo.ixcsoft.com.br</text>
+      <text class="no-legenda" x="698" y="1054">cliente · boleto · plano · chamado</text>
+    </g>
 
-  <line x1="595" y1="205" x2="668" y2="205" stroke="#4B4C51" stroke-width="1.8" marker-end="url(#arrow-light)"/>
-  <line x1="595" y1="290" x2="668" y2="290" stroke="#4B4C51" stroke-width="1.8" marker-end="url(#arrow-light)"/>
+    <!-- Cross-layer edges -->
+    <path id="p-mobile-l" class="fio" stroke="#7c3aed" d="M590,150 V310" marker-end="url(#seta-violet-l)"/>
+    <rect class="fio-rotulo-fundo" x="530" y="212" width="120" height="22" rx="6"/>
+    <text class="fio-rotulo" x="590" y="228" text-anchor="middle" fill="#7c3aed">REST / JSON</text>
+    <circle r="3" fill="#7c3aed" class="flow-dot"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#p-mobile-l"/></animateMotion></circle>
 
-  <text x="900" y="550" text-anchor="end" font-size="10.5" fill="#B9BABD">DBS TELECOM — Assistente Virtual</text>
+    <path id="p-ollama-l" class="fio" stroke="#0891b2" d="M840,555 C930,600 960,700 720,975" marker-end="url(#seta-cyan-l)"/>
+    <rect class="fio-rotulo-fundo" x="835" y="700" width="120" height="22" rx="6"/>
+    <text class="fio-rotulo" x="895" y="716" text-anchor="middle" fill="#0891b2">tool-calling</text>
+    <circle r="3" fill="#0891b2" class="flow-dot"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#p-ollama-l"/></animateMotion></circle>
+
+    <path id="p-ixc-l" class="fio" stroke="#c2670a" d="M840,685 C900,780 830,880 775,975" marker-end="url(#seta-amber-l)"/>
+    <rect class="fio-rotulo-fundo" x="805" y="850" width="120" height="22" rx="6"/>
+    <text class="fio-rotulo" x="865" y="866" text-anchor="middle" fill="#c2670a">httpx / webservice</text>
+    <circle r="3" fill="#c2670a" class="flow-dot"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#p-ixc-l"/></animateMotion></circle>
+
+    <text class="rodape" x="590" y="1170" text-anchor="middle">Não é arquitetura RAG — tool-calling estruturado (via MCP) contra dados transacionais reais</text>
+  </g>
 </svg>
