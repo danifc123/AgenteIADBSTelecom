@@ -37,8 +37,16 @@ class OllamaClient:
         await self._client.aclose()
 
     async def chat(self, messages: list[dict], tools: list[dict] | None = None) -> dict:
-        """Envia o histórico de mensagens ao Ollama, com as tools disponíveis. Retorna a mensagem de resposta do modelo."""
-        payload: dict = {"model": self._model, "messages": messages, "stream": False}
+        """Envia o histórico de mensagens ao Ollama, com as tools disponíveis. Retorna a mensagem de resposta do modelo.
+
+        Regra de negócio: `think="low"` é obrigatório para modelos raciocinadores tipo o
+        gpt-oss — sem um nível explícito, o raciocínio interno do modelo (em inglês) vazava
+        direto no texto de resposta ao cliente (bug real encontrado em teste). Passar
+        `think=True/False` é ignorado pelo gpt-oss especificamente; precisa ser a string
+        "low"/"medium"/"high". Modelos sem suporte a "thinking" (ex: qwen2.5:7b local)
+        simplesmente ignoram o campo.
+        """
+        payload: dict = {"model": self._model, "messages": messages, "stream": False, "think": "low"}
         if tools:
             payload["tools"] = tools
 

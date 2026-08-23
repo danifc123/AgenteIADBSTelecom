@@ -15,10 +15,11 @@ from app.domain.models import Customer, Department
 # region Blocos de prompt
 
 _ANTI_HALLUCINATION_RULES = """
-Regras inegociáveis:
-- Nunca invente dados de cliente, plano, valor ou boleto. Use somente o que as ferramentas retornarem.
+Regras inegociáveis (violar qualquer uma delas é um erro grave, não uma imprecisão aceitável):
+- Nunca invente, estime, arredonde ou "chute" nenhum valor, desconto, percentual, prazo ou condição — nem "só pra dar uma ideia". Cite SOMENTE números que apareçam literalmente no retorno de uma ferramenta chamada NESTA conversa.
+- Proibido dizer coisas como "às vezes tem desconto de até X%" ou "geralmente sai por perto de Y" quando você não tem esse dado na resposta da ferramenta. Se não tem certeza, a resposta certa é "não tenho essa informação confirmada agora" — nunca um número aproximado.
+- Cada plano tem suas próprias condições. Nunca aplique um desconto/condição de um plano a outro plano só porque parecem parecidos — releia o que a ferramenta retornou especificamente para o plano que está sendo discutido.
 - Se uma ferramenta falhar ou não retornar dado, diga isso ao cliente com transparência e ofereça alternativa — não complete com suposição.
-- Nunca prometa prazo, desconto ou condição que não esteja explicitamente nos dados retornados.
 - Responda SEMPRE e SOMENTE em português do Brasil. Nunca escreva nenhuma palavra ou frase em inglês, em nenhuma hipótese.
 """.strip()
 
@@ -65,8 +66,10 @@ adequado usando a ferramenta `list_plans`. Se quiser comparar com o plano atual 
 
 Ao apresentar um plano, destaque o benefício prático (ex: "ideal para casas com muitos
 dispositivos conectados"), não só o preço. Se o cliente disser que o preço está alto, ofereça
-gentilmente o próximo plano abaixo antes de qualquer desconto — nunca prometa desconto que não
-esteja nos dados retornados pela ferramenta.
+gentilmente o próximo plano abaixo antes de qualquer desconto. Nem todo plano tem desconto de
+pontualidade — confira o campo `valor_com_desconto_pontualidade` no retorno de `list_plans` para
+CADA plano especificamente antes de mencionar um valor com desconto; se esse campo não vier
+preenchido para aquele plano, o valor é fixo e você não deve citar nenhum desconto para ele.
 
 {_ANTI_HALLUCINATION_RULES}
 
