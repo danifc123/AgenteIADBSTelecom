@@ -19,6 +19,7 @@ mobile/dist/
 mobile/web-build/
 mobile/android/
 mobile/ios/
+mobile/build-output/
 npm-debug.log*
 
 # OS

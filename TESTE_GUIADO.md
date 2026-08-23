@@ -61,13 +61,16 @@ recomendação se ajusta ao que você descreveu.
 
 ## 3. Financeiro
 
-Sessão nova. Digite: **"tenho algum boleto em aberto?"**
+Sessão nova. Identifique-se com **`03824222000117`** (CNPJ — este cliente de teste tem boletos com
+código de barras real cadastrado, diferente do Everaldo). Digite: **"tenho algum boleto em aberto?"**
 
 **✅ Esperado:**
 - Classifica como Financeiro
-- Retorna valor e vencimento reais de um boleto (ou diz claramente que não há nenhum em aberto)
-- **Nunca** deve inventar link ou código de barras — se vier vazio, a IA deve dizer que vai chegar
-  por outro canal, não inventar uma URL
+- Retorna valor e vencimento reais de um boleto, e o **código de barras (linha digitável) real**
+  pra pagar — isso cobre o requisito do desafio de "disponibilizar o boleto para acesso/download"
+- Se testar com o Everaldo (`54996656569`) em vez disso: o boleto dele não tem código de barras
+  cadastrado na IXC demo, então a IA deve dizer isso com transparência, **nunca** inventar um link
+  ou código
 
 ---
 
