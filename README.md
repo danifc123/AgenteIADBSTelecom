@@ -189,7 +189,7 @@ com um contato de teste real e o que esperar em cada etapa.
 | `IXC_TOKEN` | ✅ | Token da API da IXC. **Nunca commitar** — só em `.env`, que está no `.gitignore`. |
 | `IXC_BASE_URL` | | URL base da API webservice da IXC |
 | `OLLAMA_BASE_URL` | | Ver [Ollama: host vs Docker vs nuvem](#ollama-host-vs-docker-vs-nuvem) |
-| `OLLAMA_MODEL` | | Modelo usado (`gpt-oss:20b` por padrão, via Ollama Cloud) |
+| `OLLAMA_MODEL` | | Modelo usado (`nemotron-3-nano:30b-cloud` por padrão, via Ollama Cloud) |
 | `OLLAMA_API_KEY` | Só p/ Ollama Cloud | Chave grátis gerada em [ollama.com/settings/keys](https://ollama.com/settings/keys). Deixe em branco rodando localmente. |
 | `OLLAMA_TIMEOUT_SECONDS` | | 180s por padrão — dá folga pro "cold start" do modelo |
 
@@ -209,7 +209,7 @@ com um contato de teste real e o que esperar em cada etapa.
 - **Ollama rodando dentro do Docker Desktop** (`--profile containerized-ollama`): sem passagem de GPU configurada, a inferência cai para **CPU-only**. Medimos ~21 tokens/segundo de processamento de prompt, contra uma sessão de chat que já acumula ~1400 tokens de contexto — o suficiente para, em alguns casos, passar de 1 minuto por resposta e esbarrar em timeout.
 - **Ollama Cloud** (`https://ollama.com`, sem instalar nada localmente): a alternativa para quem não tem GPU/RAM suficiente na máquina para carregar o modelo (encontramos isso na prática: `qwen2.5:7b` local precisa de ~2,5 GB de RAM livre só pra carregar, e nem sempre isso está disponível). Tier gratuito, "uso leve" (rate limited, mas suficiente pro MVP). Requer uma chave grátis em [ollama.com/settings/keys](https://ollama.com/settings/keys).
 
-**Configuração usada por padrão neste projeto**: Ollama Cloud, com o modelo `gpt-oss:20b` — não `qwen3.5:cloud`, porque a variante do Qwen na nuvem só está disponível na versão 397b, que exige plano pago; `gpt-oss:20b` é gratuito e faz tool-calling corretamente com o schema deste projeto (testado nos 3 departamentos).
+**Configuração usada por padrão neste projeto**: Ollama Cloud, com o modelo `nemotron-3-nano:30b-cloud` — gratuito ("uso leve", mesmo tier do `gpt-oss:20b`), com tool-calling confiável e português mais limpo. Comparamos os dois modelos gratuitos rodando o mesmo roteiro de teste (Comercial/Suporte/Financeiro): o `gpt-oss:20b` ocasionalmente misturava inglês no meio da resposta e inventou um desconto que não existia no catálogo; o `nemotron-3-nano:30b-cloud` não repetiu nenhum dos dois problemas nos testes — por isso é o padrão atual (`gpt-oss:20b` continua funcional como alternativa). `qwen3.5:cloud` também foi testado e **exige plano pago** (confirmado direto na API, apesar de alguma documentação de terceiros sugerir o contrário).
 
 Se preferir rodar localmente (sem depender de internet/nuvem), troque no `.env`:
 
