@@ -391,9 +391,3 @@ de sessão.
   inglês) só apareceram assim, não em teste unitário.
 
 ---
-
-## Limitações conhecidas
-
-- **Emulador Android**: não foi possível validar num emulador local nesta máquina (faltava JDK 17+, não instalado para não fazer uma mudança grande no sistema sem confirmar antes). O app foi validado por outros meios: `tsc --noEmit` sem erros e `expo export` empacotando com sucesso (1144 módulos). Recomendado testar via Expo Go num celular real (`npx expo start` + escanear o QR code) ou instalar um JDK 17+ para rodar o emulador.
-- **`id_assunto`/`setor` do chamado de Suporte** são específicos do catálogo deste ambiente demo — reconferir numa instalação de produção.
-- **Sessão em memória**: reinicia zerada se o backend reiniciar (sem banco de dados — decisão deliberada para manter o MVP simples dentro do prazo).
