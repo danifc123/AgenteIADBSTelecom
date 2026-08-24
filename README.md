@@ -22,6 +22,7 @@ resposta, nunca inventado.
 
 ## Sumário
 
+- [Capturas de tela](#capturas-de-tela)
 - [Arquitetura](#arquitetura)
 - [Estrutura do projeto](#estrutura-do-projeto)
 - [Como rodar](#como-rodar)
@@ -34,6 +35,18 @@ resposta, nunca inventado.
 - [Testes](#testes)
 - [Convenções de clean code do projeto](#convenções-de-clean-code-do-projeto)
 - [Limitações conhecidas](#limitações-conhecidas)
+
+---
+
+## Capturas de tela
+
+| | |
+|---|---|
+| <img src="docs/screenshots/home.jpg" width="260" alt="Tela inicial do app, com o botão Falar com a DBS e o ícone de configurar servidor"> **Tela inicial** | <img src="docs/screenshots/identificacao.jpg" width="260" alt="Tela de identificação por telefone ou CPF"> **Identificação por telefone/CPF** |
+| <img src="docs/screenshots/saudacao.jpg" width="260" alt="Saudação personalizada do assistente virtual pelo nome do cliente"> **Saudação personalizada** | <img src="docs/screenshots/comercial-pergunta.jpg" width="260" alt="Assistente explicando o que pode fazer no departamento Comercial"> **Comercial — esclarecendo dúvidas** |
+| <img src="docs/screenshots/comercial-planos.jpg" width="260" alt="Assistente listando planos reais de internet com preço e velocidade"> **Comercial — planos reais** | <img src="docs/screenshots/suporte.jpg" width="260" alt="Pré-diagnóstico de Suporte perguntando se a lentidão afeta vários aparelhos"> **Suporte — pré-diagnóstico (N1)** |
+| <img src="docs/screenshots/financeiro.jpg" width="260" alt="Financeiro informando boleto em aberto sem inventar código de barras que não existe"> **Financeiro — sem alucinar dado que não existe** | <img src="docs/screenshots/config-servidor-erro.jpg" width="260" alt="Tela de configurar servidor mostrando erro ao testar um endereço incorreto"> **Configurar servidor — teste falhou** |
+| <img src="docs/screenshots/config-servidor-sucesso.jpg" width="260" alt="Tela de configurar servidor mostrando conexão OK após corrigir o endereço"> **Configurar servidor — conexão OK** | <img src="docs/screenshots/config-servidor-padrao.jpg" width="260" alt="Tela de configurar servidor com o endereço padrão preenchido"> **Configurar servidor — endereço padrão** |
 
 ---
 
