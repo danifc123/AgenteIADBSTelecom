@@ -340,9 +340,3 @@ pytest tests/test_ixc_client_live.py -v
 ```
 
 ---
-
-## O que fazer se algo sair diferente do esperado
-
-Anote **a mensagem exata** que apareceu (print ou copiar o texto) e em qual passo do roteiro — isso
-é o suficiente pra rastrear se foi um problema de classificação, de uma ferramenta específica (IXC)
-ou do modelo de IA. Consulte também a seção "Limitações conhecidas" no [README.md](README.md).
