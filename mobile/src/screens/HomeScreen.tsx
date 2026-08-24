@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 
 import { DbsLogoFull } from '../components/DbsLogo';
 import type { ScreenProps } from '../navigation/AppNavigator';
@@ -30,16 +30,25 @@ export function HomeScreen({ navigation }: ScreenProps<'Home'>) {
         </View>
 
         <View style={styles.ctaArea}>
-          <Button
-            mode="contained"
-            buttonColor={colors.laranjaVibrante}
-            textColor={colors.white}
-            contentStyle={styles.ctaButtonContent}
-            style={styles.ctaButton}
-            onPress={() => navigation.navigate('Identification')}
-          >
-            Falar com a DBS
-          </Button>
+          <View style={styles.ctaRow}>
+            <Button
+              mode="contained"
+              buttonColor={colors.laranjaVibrante}
+              textColor={colors.white}
+              contentStyle={styles.ctaButtonContent}
+              style={styles.ctaButton}
+              onPress={() => navigation.navigate('Identification')}
+            >
+              Falar com a DBS
+            </Button>
+            <IconButton
+              icon="cog-outline"
+              size={22}
+              style={styles.settingsButton}
+              iconColor={colors.textMuted}
+              onPress={() => navigation.navigate('ServerConfig')}
+            />
+          </View>
           <Text style={styles.departmentsHint}>Comercial  •  Suporte  •  Financeiro</Text>
         </View>
       </View>
@@ -73,10 +82,16 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     borderRadius: 28,
-    width: '100%',
+    flex: 1,
   },
   ctaButtonContent: {
     height: 56,
+  },
+  ctaRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    width: '100%',
   },
   decorBottom: {
     backgroundColor: colors.laranjaVibrante,
@@ -104,6 +119,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     letterSpacing: 0.3,
+  },
+  settingsButton: {
+    backgroundColor: colors.inputBackground,
+    borderRadius: 20,
+    height: 56,
+    margin: 0,
+    width: 56,
   },
   subtitle: {
     color: colors.textMuted,
