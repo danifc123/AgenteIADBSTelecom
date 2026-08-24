@@ -34,7 +34,6 @@ resposta, nunca inventado.
 - [Segurança](#segurança)
 - [Testes](#testes)
 - [Convenções de clean code do projeto](#convenções-de-clean-code-do-projeto)
-- [Limitações conhecidas](#limitações-conhecidas)
 
 ---
 
